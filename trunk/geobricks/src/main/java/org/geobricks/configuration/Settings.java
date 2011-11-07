@@ -20,16 +20,21 @@
  */
 package org.geobricks.configuration;
 
+/**
+ * 
+ * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a> 
+ *
+ */
 public class Settings {
 
 	private String geoserverIP = "";
-	
+
 	private String geoserverPORT = "";
-	
+
 	private String layersFolder = "";
-	
+
 	public Settings() {
-		
+
 	}
 
 	public Settings(String geoserverIP, String geoserverPORT, String layersFolder) {
@@ -62,5 +67,5 @@ public class Settings {
 	public void setLayersFolder(String layersFolder) {
 		this.layersFolder = layersFolder;
 	}
-	
+
 }
