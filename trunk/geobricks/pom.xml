@@ -5,4 +5,5 @@
   <version>0.1</version>
   <name>GeoBricks</name>
   <description>Bind together different geographic open source projects.</description>
+  <packaging>jar</packaging>
 </project>
