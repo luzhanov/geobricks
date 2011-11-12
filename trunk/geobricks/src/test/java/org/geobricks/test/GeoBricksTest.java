@@ -18,34 +18,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.geobricks.gdal;
+package org.geobricks.test;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.List;
 
-import org.geobricks.gdal.info.GDALInfo;
-import org.geobricks.test.GeoBricksTest;
+import junit.framework.TestCase;
 
 /**
  * 
  * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a> 
  *
  */
-public class GDALConnectorTest extends GeoBricksTest {
+public class GeoBricksTest extends TestCase {
 
-	public void testInvokeGDALInfo() {
-		try {
-			GDALInfo g = new GDALInfo();
-			g.setInputFilepath(getFilePath("long_beach-e.dem"));
-			g.metadata(false);
-			GDALConnector c = new GDALConnector();
-			List<String> l = c.invoke(g);
-			print(l);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public String getFilePath(String filename) {
+		String p = "";
+		File f = new File(filename);
+		p = f.getAbsolutePath();
+		int idx = p.lastIndexOf(File.separator);
+		p = p.substring(0, idx);
+		p = p + File.separator + "src" + File.separator + "test" + File.separator + "resources" + File.separator + "layers" + File.separator + "raster" + File.separator + filename;
+		return p;
+	}
+	
+	public void print(List<String> l) {
+		for (int i = 0 ; i < l.size() ; i++) 
+			System.out.format("[%03d]\t" + l.get(i) + "\n", i);
 	}
 	
 }
