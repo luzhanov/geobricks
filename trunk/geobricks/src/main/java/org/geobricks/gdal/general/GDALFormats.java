@@ -18,34 +18,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.geobricks.test;
+package org.geobricks.gdal.general;
 
-import java.io.File;
-import java.util.List;
-
-import junit.framework.TestCase;
+import org.geobricks.gdal.GDAL;
 
 /**
  * 
  * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a> 
  *
  */
-public class GeoBricksTest extends TestCase {
+public class GDALFormats extends GDAL {
 
-	public String getFilePath(String filename) {
-		String p = "";
-		File f = new File(filename);
-		p = f.getAbsolutePath();
-		int idx = p.lastIndexOf(File.separator);
-		p = p.substring(0, idx);
-		p = p + File.separator + "src" + File.separator + "test" + File.separator + "resources" + File.separator + "layers" + File.separator + "raster" + File.separator + filename;
-		return p;
+	public GDALFormats() {
+		super();
 	}
 	
-	public void print(List<String> l) {
-		for (int i = 0 ; i < l.size() ; i++) 
-			System.out.format("[%03d]\t" + l.get(i) + "\n", i);
-		System.out.println();
+	public GDALFormats(String script) {
+		super(script);
+	}
+	
+	@Override
+	public String convert() {
+		return "gdalinfo --formats";
 	}
 	
 }

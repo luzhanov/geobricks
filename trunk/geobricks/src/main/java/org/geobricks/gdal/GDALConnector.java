@@ -20,7 +20,6 @@
  */
 package org.geobricks.gdal;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -29,19 +28,29 @@ import java.util.List;
 
 /**
  * 
- * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a> 
- *
+ * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a>
+ * 
  */
 public class GDALConnector {
-	
+
+	/**
+	 * @param g
+	 *            Java Bean
+	 * @return Output of GDAL command
+	 * @throws IOException
+	 * @throws Exception
+	 * 
+	 *             Convert an instance of <code>GDAL</code> and execute the GDAL
+	 *             command.
+	 */
 	public List<String> invoke(GDAL g) throws IOException, Exception {
 		List<String> l = new ArrayList<String>();
 		Process p = Runtime.getRuntime().exec(g.convert());
-        BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        String s = null;
-        while ((s = stdInput.readLine()) != null) 
-        	l.add(s);
-        return l;
+		BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		String s = null;
+		while ((s = stdInput.readLine()) != null)
+			l.add(s);
+		return l;
 	}
-	
+
 }

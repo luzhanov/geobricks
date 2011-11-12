@@ -23,6 +23,8 @@ package org.geobricks.gdal;
 import java.io.IOException;
 import java.util.List;
 
+import org.geobricks.gdal.general.GDALFormat;
+import org.geobricks.gdal.general.GDALFormats;
 import org.geobricks.gdal.info.GDALInfo;
 import org.geobricks.test.GeoBricksTest;
 
@@ -33,11 +35,37 @@ import org.geobricks.test.GeoBricksTest;
  */
 public class GDALConnectorTest extends GeoBricksTest {
 
-	public void testInvokeGDALInfo() {
+	public void testGDALInfo() {
 		try {
 			GDALInfo g = new GDALInfo();
 			g.setInputFilepath(getFilePath("long_beach-e.dem"));
 			g.metadata(false);
+			GDALConnector c = new GDALConnector();
+			List<String> l = c.invoke(g);
+			print(l);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void testGDALFormats() {
+		try {
+			GDALFormats g = new GDALFormats();
+			GDALConnector c = new GDALConnector();
+			List<String> l = c.invoke(g);
+			print(l);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void testGDALFormat() {
+		try {
+			GDALFormat g = new GDALFormat(FORMAT.R);
 			GDALConnector c = new GDALConnector();
 			List<String> l = c.invoke(g);
 			print(l);

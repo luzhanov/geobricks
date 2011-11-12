@@ -22,27 +22,35 @@ package org.geobricks.gdal;
 
 /**
  * 
- * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a> 
- *
+ * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a>
+ * 
  */
 public abstract class GDAL {
-	
+
 	public String script = "";
 
 	public String inputFilepath = "";
-	
+
 	public String outputFilepath = "";
-	
+
 	public boolean help = false;
 
 	public GDAL() {
-		
+
 	}
-	
+
 	public GDAL(String script) {
+		super();
 		this.setScript(script);
 	}
-	
+
+	/**
+	 * 
+	 * @return GDAL command
+	 * 
+	 *         This function convert the input Java bean into an executable GDAL
+	 *         command.
+	 */
 	public String convert() {
 		return this.getScript();
 	}
@@ -78,5 +86,5 @@ public abstract class GDAL {
 	public void help(boolean help) {
 		this.help = help;
 	}
-	
+
 }
