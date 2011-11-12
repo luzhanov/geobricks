@@ -27,10 +27,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
-import org.geobricks.gdal.beans.GDAL;
-
 /**
  * 
  * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a> 
@@ -38,16 +34,9 @@ import org.geobricks.gdal.beans.GDAL;
  */
 public class GDALConnector {
 	
-	private static Logger LOGGER = Logger.getLogger(GDALConnector.class);
-	
-	static {
-		BasicConfigurator.configure();
-	}
-
 	public List<String> invoke(GDAL g) throws IOException, Exception {
 		List<String> l = new ArrayList<String>();
-		String cmd = Bean2GDAL.convert(g);
-		Process p = Runtime.getRuntime().exec(cmd);
+		Process p = Runtime.getRuntime().exec(g.convert());
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
         String s = null;
         while ((s = stdInput.readLine()) != null) 
