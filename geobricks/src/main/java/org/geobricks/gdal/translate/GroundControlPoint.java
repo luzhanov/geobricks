@@ -34,13 +34,16 @@ public class GroundControlPoint {
 	private String easting;
 	
 	private String northing;
+	
+	private String elevation;
 
-	public GroundControlPoint(String pixel, String line, String easting, String northing) {
+	public GroundControlPoint(String pixel, String line, String easting, String northing, String elevation) {
 		super();
 		this.setPixel(pixel);
 		this.setLine(line);
 		this.setEasting(easting);
 		this.setNorthing(northing);
+		this.setElevation(elevation);
 	}
 
 	public String getPixel() {
@@ -73,6 +76,14 @@ public class GroundControlPoint {
 
 	public void setNorthing(String northing) {
 		this.northing = northing;
+	}
+
+	public String getElevation() {
+		return elevation;
+	}
+
+	public void setElevation(String elevation) {
+		this.elevation = elevation;
 	}
 	
 }

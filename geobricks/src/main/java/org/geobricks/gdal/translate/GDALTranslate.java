@@ -335,7 +335,7 @@ public class GDALTranslate extends GDAL {
 	}
 
 	@Override
-	public String convert() {
+	public String convert() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		if (this.script != null && !this.script.isEmpty()) {
 			return this.script;
@@ -387,9 +387,27 @@ public class GDALTranslate extends GDAL {
 			if (this.getCreationOption() != null && !this.getCreationOption().isEmpty())
 				for (String key : this.getCreationOption().keySet())
 					sb.append("-co \"").append(key).append("=").append(this.getCreationOption().get(key)).append("\" ");
-//			if (this.getGroundControlPoint() != null) {
-//				
-//			}
+			if (this.getGroundControlPoint() != null) {
+				sb.append("-gcp ").append(this.getGroundControlPoint().getPixel()).append(" ").append(this.getGroundControlPoint().getLine()).append(" ");
+				sb.append(this.getGroundControlPoint().getEasting()).append(" ").append(this.getGroundControlPoint().getNorthing()).append(" ");
+				sb.append(this.getGroundControlPoint().getElevation()).append(" ");
+			}
+			if (this.suppressProgressMonitor())
+				sb.append("-q ");
+			if (this.subDatasets2IndividualOutputs())
+				sb.append("-sds ");
+			if (this.statistics())
+				sb.append("-stats ");
+			if (this.getInputFilepath() != null && !this.getInputFilepath().isEmpty()) {
+				sb.append(this.getInputFilepath()).append(" ");
+			} else {
+				throw new Exception("Input filepath is null or empty.");
+			}
+			if (this.getOutputFilepath() != null && !this.getOutputFilepath().isEmpty()) {
+				sb.append(this.getOutputFilepath()).append(" ");
+			} else {
+				throw new Exception("Output filepath is null or empty.");
+			}
 		}
 		return sb.toString();
 	}

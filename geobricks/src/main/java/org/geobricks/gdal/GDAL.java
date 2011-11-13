@@ -51,7 +51,7 @@ public abstract class GDAL {
 	 *         This function convert the input Java bean into an executable GDAL
 	 *         command.
 	 */
-	public String convert() {
+	public String convert() throws Exception {
 		return this.getScript();
 	}
 
