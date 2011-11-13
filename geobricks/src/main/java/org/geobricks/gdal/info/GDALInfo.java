@@ -29,160 +29,182 @@ import org.geobricks.gdal.GDAL;
  */
 public class GDALInfo extends GDAL {
 
+	/**
+	 * Force computation of the actual min/max values for each band in the
+	 * dataset.
+	 */
 	private boolean minMax = false;
 
+	/**
+	 * Read and display image statistics. Force computation if no statistics are
+	 * stored in an image.
+	 */
 	private boolean statistics = false;
 
+	/**
+	 * Report histogram information for all bands.
+	 */
 	private boolean histogram = false;
 
-	private boolean groundControlPoints = true;
+	/**
+	 * Suppress ground control points list printing. It may be useful for
+	 * datasets with huge amount of GCPs, such as L1B AVHRR or HDF4 MODIS which
+	 * contain thousands of them.
+	 */
+	private boolean suppressGroundControlPoints = false;
 
-	private boolean metadata = true;
+	/**
+	 * Suppress metadata printing. Some datasets may contain a lot of metadata
+	 * strings.
+	 */
+	private boolean suppressMetadata = false;
 
+	/**
+	 * Force computation of the checksum for each band in the dataset.
+	 */
 	private boolean checksum = false;
 
-	private boolean colorTable = false;
+	/**
+	 * Suppress printing of color table.
+	 */
+	private boolean suppressColorTable = false;
 
-	private String domain = "";
+	/**
+	 * Report metadata for the specified domain
+	 */
+	private String domain;
 
-	public boolean showMinMax() {
+	public GDALInfo() {
+		super();
+	}
+
+	public GDALInfo(String script) {
+		super(script);
+	}
+
+	@Override
+	public String convert() {
+		StringBuilder sb = new StringBuilder();
+		if (this.script != null && !this.script.isEmpty()) {
+			return this.script;
+		} else if (this.showHelp()) {
+			sb.append("gdalinfo --help");
+			return sb.toString();
+		} else {
+			sb.append("gdalinfo ");
+			if (this.getInputFilepath() != null && !this.getInputFilepath().isEmpty())
+				sb.append(this.getInputFilepath()).append(" ");
+			if (this.showChecksum())
+				sb.append("-checksum ");
+			if (this.suppressGroundControlPoints())
+				sb.append("-nogcp ");
+			if (this.showHistogram())
+				sb.append("-hist ");
+			if (this.suppressMetadata())
+				sb.append("-nomd ");
+			if (this.suppressColorTable())
+				sb.append("-noct ");
+			if (this.forceMinMax())
+				sb.append("-mm ");
+			if (this.showStatistics())
+				sb.append("-stats ");
+			if (this.getDomain() != null && !this.getDomain().isEmpty())
+				sb.append("-mdd " + this.getDomain());
+			return sb.toString();
+		}
+	}
+
+	private boolean forceMinMax() {
 		return minMax;
 	}
 
 	/**
-	 * @param show
-	 * 
-	 *            Force computation of the actual min/max values for each band
-	 *            in the dataset.
+	 * Force computation of the actual min/max values for each band in the
+	 * dataset.
 	 */
-	public void minMax(boolean show) {
-		this.minMax = show;
+	public void minMax(boolean force) {
+		this.minMax = force;
 	}
 
-	public boolean showStatistics() {
+	private boolean showStatistics() {
 		return statistics;
 	}
 
 	/**
-	 * @param show
-	 * 
-	 *            Read and display image statistics. Force computation if no
-	 *            statistics are stored in an image.
+	 * Read and display image statistics. Force computation if no statistics are
+	 * stored in an image.
 	 */
 	public void statistics(boolean show) {
 		this.statistics = show;
 	}
 
-	public boolean showHistogram() {
+	private boolean showHistogram() {
 		return histogram;
 	}
 
 	/**
-	 * @param show
-	 * 
-	 *            Report histogram information for all bands.
+	 * Report histogram information for all bands.
 	 */
 	public void histogram(boolean show) {
 		this.histogram = show;
 	}
 
-	public boolean showGroundControlPoints() {
-		return groundControlPoints;
+	private boolean suppressGroundControlPoints() {
+		return suppressGroundControlPoints;
 	}
 
 	/**
-	 * @param show
-	 * 
-	 *            Show ground control points list printing. It may be useful for
-	 *            datasets with huge amount of GCPs, such as L1B AVHRR or HDF4
-	 *            MODIS which contain thousands of them.
+	 * Suppress ground control points list printing. It may be useful for
+	 * datasets with huge amount of GCPs, such as L1B AVHRR or HDF4 MODIS which
+	 * contain thousands of them.
 	 */
-	public void groundControlPoints(boolean show) {
-		this.groundControlPoints = show;
+	public void groundControlPoints(boolean suppress) {
+		this.suppressGroundControlPoints = suppress;
 	}
 
-	public boolean showMetadata() {
-		return metadata;
+	private boolean suppressMetadata() {
+		return suppressMetadata;
 	}
 
 	/**
-	 * @param show
-	 * 
-	 *            Show metadata printing. Some datasets may contain a lot of
-	 *            metadata strings.
+	 * Suppress metadata printing. Some datasets may contain a lot of metadata
+	 * strings.
 	 */
-	public void metadata(boolean show) {
-		this.metadata = show;
+	public void metadata(boolean suppress) {
+		this.suppressMetadata = suppress;
 	}
 
-	public boolean showChecksum() {
+	private boolean showChecksum() {
 		return checksum;
 	}
 
 	/**
-	 * @param show
-	 * 
-	 *            Force computation of the checksum for each band in the
-	 *            dataset.
+	 * Force computation of the checksum for each band in the dataset.
 	 */
-	public void checksum(boolean show) {
-		this.checksum = show;
+	public void checksum(boolean forceComputation) {
+		this.checksum = forceComputation;
 	}
 
-	public String showDomain() {
+	private boolean suppressColorTable() {
+		return suppressColorTable;
+	}
+
+	/**
+	 * Suppress printing of color table.
+	 */
+	public void colorTable(boolean suppress) {
+		this.suppressColorTable = suppress;
+	}
+
+	private String getDomain() {
 		return domain;
 	}
 
 	/**
-	 * @param show
-	 * 
-	 *            Report metadata for the specified domain
+	 * Report metadata for the specified domain
 	 */
-	public void domain(String show) {
-		this.domain = show;
-	}
-
-	public boolean showColorTable() {
-		return colorTable;
-	}
-
-	/**
-	 * @param show
-	 * 
-	 *            Suppress printing of color table.
-	 */
-	public void colorTable(boolean show) {
-		this.colorTable = show;
-	}
-	
-	@Override
-	public String convert() {
-		StringBuilder sb = new StringBuilder();
-		if (this.showHelp()) {
-			sb.append("gdalinfo --help");
-			return sb.toString();
-		} else {
-			sb.append("gdalinfo ");
-			if (this.getInputFilepath() != null && !this.getInputFilepath().isEmpty()) 
-				sb.append(this.getInputFilepath()).append(" ");
-			if (this.showChecksum()) 
-				sb.append("-checksum ");
-			if (!this.showGroundControlPoints())
-				sb.append("-nogcp ");
-			if (this.showHistogram())
-				sb.append("-hist ");
-			if (!this.showMetadata())
-				sb.append("-nomd ");
-			if (!this.showColorTable())
-				sb.append("-noct ");
-			if (this.showMinMax())
-				sb.append("-mm ");
-			if (this.showStatistics())
-				sb.append("-stats ");
-			if (this.showDomain() != null && !this.showDomain().isEmpty())
-				sb.append("-mdd " + this.showDomain());
-			return sb.toString();
-		}
+	public void setDomain(String domain) {
+		this.domain = domain;
 	}
 
 }

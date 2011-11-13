@@ -7,6 +7,7 @@
 	<name>GeoBricks</name>
 	<description>Bind together different geographic open source projects.</description>
 	<packaging>jar</packaging>
+	<url>http://code.google.com/p/geobricks/</url>
 	<build>
 		<plugins>
 			<plugin>
@@ -14,6 +15,12 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
 				</configuration>
 			</plugin>
 		</plugins>
