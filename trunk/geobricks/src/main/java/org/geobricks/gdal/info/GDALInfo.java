@@ -83,7 +83,7 @@ public class GDALInfo extends GDAL {
 	}
 
 	@Override
-	public String convert() {
+	public String convert() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		if (this.script != null && !this.script.isEmpty()) {
 			return this.script;
