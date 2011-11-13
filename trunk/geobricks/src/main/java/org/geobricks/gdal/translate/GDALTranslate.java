@@ -166,8 +166,10 @@ public class GDALTranslate extends GDAL {
 	 */
 	private boolean statistics = false;
 
-	public GDALTranslate() {
+	public GDALTranslate(String inputFilepath, String outputFilepath) {
 		super();
+		this.setInputFilepath(inputFilepath);
+		this.setOutputFilepath(outputFilepath);
 	}
 
 	public GDALTranslate(String script) {
