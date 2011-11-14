@@ -20,6 +20,9 @@
  */
 package org.geobricks.gdal;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 
  * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a>
@@ -27,13 +30,15 @@ package org.geobricks.gdal;
  */
 public abstract class GDAL {
 
-	public String script = "";
+	private String script;
 
-	public String inputFilepath = "";
+	private String inputFilepath;
 
-	public String outputFilepath = "";
+	private String outputFilepath;
 
-	public boolean help = false;
+	private boolean help = false;
+	
+	private Map<String, String> config;
 
 	public GDAL() {
 
@@ -85,6 +90,20 @@ public abstract class GDAL {
 
 	public void help(boolean help) {
 		this.help = help;
+	}
+
+	public Map<String, String> getConfig() {
+		return config;
+	}
+
+	public void setConfig(Map<String, String> config) {
+		this.config = config;
+	}
+	
+	public void setConfig(String key, String value) {
+		if (this.config == null)
+			this.config = new HashMap<String, String>();
+		this.config.put(key, value);
 	}
 
 }

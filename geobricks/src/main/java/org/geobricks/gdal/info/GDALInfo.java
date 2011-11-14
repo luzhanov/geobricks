@@ -85,8 +85,8 @@ public class GDALInfo extends GDAL {
 	@Override
 	public String convert() throws Exception {
 		StringBuilder sb = new StringBuilder();
-		if (this.script != null && !this.script.isEmpty()) {
-			return this.script;
+		if (this.getScript() != null && !this.getScript().isEmpty()) {
+			return this.getScript();
 		} else if (this.showHelp()) {
 			sb.append("gdalinfo --help");
 			return sb.toString();
@@ -110,6 +110,9 @@ public class GDALInfo extends GDAL {
 				sb.append("-stats ");
 			if (this.getDomain() != null && !this.getDomain().isEmpty())
 				sb.append("-mdd " + this.getDomain());
+			if (this.getConfig() != null && !this.getConfig().isEmpty())
+				for (String key : this.getConfig().keySet())
+					sb.append("--config ").append(key).append(" ").append(this.getConfig().get(key)).append(" ");
 			return sb.toString();
 		}
 	}

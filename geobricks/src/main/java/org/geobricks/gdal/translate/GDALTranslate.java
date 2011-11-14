@@ -20,6 +20,9 @@
  */
 package org.geobricks.gdal.translate;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.geobricks.gdal.GDAL;
@@ -57,7 +60,7 @@ public class GDALTranslate extends GDAL {
 	 * be set to "mask,1" (or just "mask") to mean the mask band of the 1st band
 	 * of the input dataset.
 	 */
-	private String[] band;
+	private List<String> bands;
 
 	/**
 	 * (GDAL >= 1.8.0) Select an input band band to create output dataset mask
@@ -200,12 +203,18 @@ public class GDALTranslate extends GDAL {
 		this.outputFormat = outputFormat;
 	}
 
-	public String[] getBand() {
-		return band;
+	public List<String> getBands() {
+		return bands;
 	}
 
-	public void setBand(String[] band) {
-		this.band = band;
+	public void setBands(List<String> bands) {
+		this.bands = bands;
+	}
+	
+	public void addBand(String band) {
+		if (this.bands == null)
+			this.bands = new ArrayList<String>();
+		this.bands.add(band);
 	}
 
 	public String getMask() {
@@ -295,9 +304,21 @@ public class GDALTranslate extends GDAL {
 	public void setMetadataOutput(Map<String, String> metadataOutput) {
 		this.metadataOutput = metadataOutput;
 	}
+	
+	public void setMetadataOutput(String key, String value) {
+		if (this.metadataOutput == null)
+			this.metadataOutput = new HashMap<String, String>();
+		this.metadataOutput.put(key, value);
+	}
 
 	public Map<String, String> getCreationOption() {
 		return creationOption;
+	}
+	
+	public void setCreationOption(String key, String value) {
+		if (this.creationOption == null)
+			this.creationOption = new HashMap<String, String>();
+		this.creationOption.put(key, value);
 	}
 
 	public void setCreationOption(Map<String, String> creationOption) {
@@ -339,8 +360,8 @@ public class GDALTranslate extends GDAL {
 	@Override
 	public String convert() throws Exception {
 		StringBuilder sb = new StringBuilder();
-		if (this.script != null && !this.script.isEmpty()) {
-			return this.script;
+		if (this.getScript() != null && !this.getScript().isEmpty()) {
+			return this.getScript();
 		} else if (this.showHelp()) {
 			sb.append("gdalinfo --help");
 			return sb.toString();
@@ -352,8 +373,8 @@ public class GDALTranslate extends GDAL {
 				sb.append("-strict ");
 			if (this.getOutputFormat() != null)
 				sb.append("-of ").append(this.getOutputFormat().name()).append(" ");
-			if (this.getBand() != null && this.getBand().length > 0)
-				for (String b : this.getBand())
+			if (this.getBands() != null && this.getBands().size() > 0)
+				for (String b : this.getBands())
 					sb.append("-b ").append(b).append(" ");
 			if (this.getMask() != null && !this.getMask().isEmpty())
 				sb.append("-mask ").append(this.getMask()).append(" ");
@@ -410,6 +431,9 @@ public class GDALTranslate extends GDAL {
 			} else {
 				throw new Exception("Output filepath is null or empty.");
 			}
+			if (this.getConfig() != null && !this.getConfig().isEmpty())
+				for (String key : this.getConfig().keySet())
+					sb.append("--config ").append(key).append(" ").append(this.getConfig().get(key)).append(" ");
 		}
 		return sb.toString();
 	}
