@@ -79,15 +79,13 @@ public class GDALConnectorTest extends GeoBricksTest {
 		}
 	}
 	
-	public void testGDALTranslate() {
+	public void testGDALTranslate1() {
 		
 		try {
 			
 			// translate layer
 			GDALTranslate g = new GDALTranslate(getFilePath("long_beach-e.dem"), "/home/kalimaha/Desktop/long_beach-e.tif");
-			Map<String, String> creationOutput = new HashMap<String, String>();
-			creationOutput.put("TILED", "YES");
-			g.setCreationOption(creationOutput);
+			g.setCreationOption("TILED", "YES");
 			List<String> l = c.invoke(g);
 			print(l);
 			
@@ -103,6 +101,26 @@ public class GDALConnectorTest extends GeoBricksTest {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	// gdal_translate rgba.tif withmask.tif -b 1 -b 2 -b 3 -mask 4 -co COMPRESS=JPEG -co PHOTOMETRIC=YCBCR --config GDAL_TIFF_INTERNAL_MASK YES
+	public void testGDALTranslate2() {
+		try {
+			GDALTranslate g = new GDALTranslate(getFilePath("long_beach-e.dem"), "/home/kalimaha/Desktop/withmask.tif");
+			g.addBand("1");
+			g.addBand("2");
+			g.addBand("3");
+			g.setMask("4");
+			g.setCreationOption("COMPRESS", "JPEG");
+			g.setCreationOption("PHOTOMETRIC", "YCBCR");
+			g.setConfig("GDAL_TIFF_INTERNAL_MASK", "YES");
+			List<String> l = c.invoke(g);
+			print(l);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
