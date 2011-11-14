@@ -21,9 +21,7 @@
 package org.geobricks.gdal;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.geobricks.gdal.constant.FORMAT;
 import org.geobricks.gdal.general.GDALFormat;
@@ -80,33 +78,24 @@ public class GDALConnectorTest extends GeoBricksTest {
 	}
 	
 	public void testGDALTranslate1() {
-		
 		try {
-			
-			// translate layer
 			GDALTranslate g = new GDALTranslate(getFilePath("long_beach-e.dem"), "/home/kalimaha/Desktop/long_beach-e.tif");
 			g.setCreationOption("TILED", "YES");
 			List<String> l = c.invoke(g);
 			print(l);
-			
-			// ask information about the new layer
-			GDALInfo g2 = new GDALInfo();
-			g2.setInputFilepath("/home/kalimaha/Desktop/long_beach-e.tif");
-			l = c.invoke(g2);
-			print(l);
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
-	// gdal_translate rgba.tif withmask.tif -b 1 -b 2 -b 3 -mask 4 -co COMPRESS=JPEG -co PHOTOMETRIC=YCBCR --config GDAL_TIFF_INTERNAL_MASK YES
+	/**
+	 * Starting with GDAL 1.8.0, to create a JPEG-compressed TIFF with internal mask from a RGBA dataset 
+	 */
 	public void testGDALTranslate2() {
 		try {
-			GDALTranslate g = new GDALTranslate(getFilePath("long_beach-e.dem"), "/home/kalimaha/Desktop/withmask.tif");
+			GDALTranslate g = new GDALTranslate(getFilePath("marbles.tif"), "/home/kalimaha/Desktop/withmask.tif");
 			g.addBand("1");
 			g.addBand("2");
 			g.addBand("3");
@@ -114,6 +103,25 @@ public class GDALConnectorTest extends GeoBricksTest {
 			g.setCreationOption("COMPRESS", "JPEG");
 			g.setCreationOption("PHOTOMETRIC", "YCBCR");
 			g.setConfig("GDAL_TIFF_INTERNAL_MASK", "YES");
+			List<String> l = c.invoke(g);
+			print(l);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Starting with GDAL 1.8.0, to create a RGBA dataset from a RGB dataset with a mask
+	 */
+	public void testGDALTranslate3() {
+		try {
+			GDALTranslate g = new GDALTranslate(getFilePath("marbles.tif"), "/home/kalimaha/Desktop/withmask.tif");
+			g.addBand("1");
+			g.addBand("2");
+			g.addBand("3");
+			g.setMask("4");
 			List<String> l = c.invoke(g);
 			print(l);
 		} catch (IOException e) {
