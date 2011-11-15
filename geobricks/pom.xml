@@ -8,10 +8,25 @@
 	<description>Bind together different geographic open source projects.</description>
 	<packaging>jar</packaging>
 	<url>http://code.google.com/p/geobricks/</url>
+	<issueManagement>
+		<system>Google Code</system>
+		<url>http://code.google.com/p/geobricks/issues/list</url>
+	</issueManagement>
+	<developers>
+		<developer>
+			<name>Guido Barbaglia</name>
+			<email>guido.barbaglia@gmail.com</email>
+		</developer>
+		<developer>
+			<name>Simone Murzilli</name>
+			<email>simone.murzilli@gmail.com</email>
+		</developer>
+	</developers>
 	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
