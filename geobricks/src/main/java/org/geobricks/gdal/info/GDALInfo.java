@@ -84,37 +84,37 @@ public class GDALInfo extends GDAL {
 
 	@Override
 	public String convert() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		if (this.getScript() != null && !this.getScript().isEmpty()) {
-			return this.getScript();
-		} else if (this.showHelp()) {
-			sb.append("gdalinfo --help");
-			return sb.toString();
-		} else {
-			sb.append("gdalinfo ");
+//		StringBuilder sb = new StringBuilder();
+//		if (this.getScript() != null && !this.getScript().isEmpty()) {
+//			return this.getScript();
+//		} else if (this.showHelp()) {
+//			this.getSB().append("gdalinfo --help");
+//			return this.getSB().toString();
+//		} else {
+			this.getSB().append("gdalinfo ");
 			if (this.getInputFilepath() != null && !this.getInputFilepath().isEmpty())
-				sb.append(this.getInputFilepath()).append(" ");
+				this.getSB().append(this.getInputFilepath()).append(" ");
 			if (this.showChecksum())
-				sb.append("-checksum ");
+				this.getSB().append("-checksum ");
 			if (this.suppressGroundControlPoints())
-				sb.append("-nogcp ");
+				this.getSB().append("-nogcp ");
 			if (this.showHistogram())
-				sb.append("-hist ");
+				this.getSB().append("-hist ");
 			if (this.suppressMetadata())
-				sb.append("-nomd ");
+				this.getSB().append("-nomd ");
 			if (this.suppressColorTable())
-				sb.append("-noct ");
+				this.getSB().append("-noct ");
 			if (this.forceMinMax())
-				sb.append("-mm ");
+				this.getSB().append("-mm ");
 			if (this.showStatistics())
-				sb.append("-stats ");
+				this.getSB().append("-stats ");
 			if (this.getDomain() != null && !this.getDomain().isEmpty())
-				sb.append("-mdd " + this.getDomain());
+				this.getSB().append("-mdd " + this.getDomain());
 			if (this.getConfig() != null && !this.getConfig().isEmpty())
 				for (String key : this.getConfig().keySet())
-					sb.append("--config ").append(key).append(" ").append(this.getConfig().get(key)).append(" ");
-			return sb.toString();
-		}
+					this.getSB().append("--config ").append(key).append(" ").append(this.getConfig().get(key)).append(" ");
+			return this.getSB().toString();
+//		}
 	}
 
 	private boolean forceMinMax() {
