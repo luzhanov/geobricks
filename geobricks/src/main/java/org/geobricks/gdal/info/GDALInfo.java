@@ -21,10 +21,14 @@
 package org.geobricks.gdal.info;
 
 import org.geobricks.gdal.GDAL;
+import org.geobricks.gdal.constant.CONFIG;
 
 /**
  * 
  * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a>
+ * 
+ *         GDALInfo lists various information about a GDAL supported
+ *         raster dataset.
  * 
  */
 public class GDALInfo extends GDAL {
@@ -84,37 +88,39 @@ public class GDALInfo extends GDAL {
 
 	@Override
 	public String convert() throws Exception {
-//		StringBuilder sb = new StringBuilder();
-//		if (this.getScript() != null && !this.getScript().isEmpty()) {
-//			return this.getScript();
-//		} else if (this.showHelp()) {
-//			this.getSB().append("gdalinfo --help");
-//			return this.getSB().toString();
-//		} else {
-			this.getSB().append("gdalinfo ");
-			if (this.getInputFilepath() != null && !this.getInputFilepath().isEmpty())
-				this.getSB().append(this.getInputFilepath()).append(" ");
-			if (this.showChecksum())
-				this.getSB().append("-checksum ");
-			if (this.suppressGroundControlPoints())
-				this.getSB().append("-nogcp ");
-			if (this.showHistogram())
-				this.getSB().append("-hist ");
-			if (this.suppressMetadata())
-				this.getSB().append("-nomd ");
-			if (this.suppressColorTable())
-				this.getSB().append("-noct ");
-			if (this.forceMinMax())
-				this.getSB().append("-mm ");
-			if (this.showStatistics())
-				this.getSB().append("-stats ");
-			if (this.getDomain() != null && !this.getDomain().isEmpty())
-				this.getSB().append("-mdd " + this.getDomain());
-			if (this.getConfig() != null && !this.getConfig().isEmpty())
-				for (String key : this.getConfig().keySet())
-					this.getSB().append("--config ").append(key).append(" ").append(this.getConfig().get(key)).append(" ");
+
+		this.getSB().append("gdalinfo ");
+		if (this.getInputFilepath() != null && !this.getInputFilepath().isEmpty())
+			this.getSB().append(this.getInputFilepath()).append(" ");
+		if (this.showChecksum())
+			this.getSB().append("-checksum ");
+		if (this.suppressGroundControlPoints())
+			this.getSB().append("-nogcp ");
+		if (this.showHistogram())
+			this.getSB().append("-hist ");
+		if (this.suppressMetadata())
+			this.getSB().append("-nomd ");
+		if (this.suppressColorTable())
+			this.getSB().append("-noct ");
+		if (this.forceMinMax())
+			this.getSB().append("-mm ");
+		if (this.showStatistics())
+			this.getSB().append("-stats ");
+		if (this.getDomain() != null && !this.getDomain().isEmpty())
+			this.getSB().append("-mdd " + this.getDomain());
+
+		// generic section
+		if (this.getScript() != null && !this.getScript().isEmpty()) {
+			return this.getScript();
+		} else if (this.showHelp()) {
+			this.getSB().append("gdalinfo --help");
 			return this.getSB().toString();
-//		}
+		}
+		if (this.getConfig() != null && !this.getConfig().isEmpty())
+			for (CONFIG key : this.getConfig().keySet())
+				this.getSB().append("--config ").append(key.name()).append(" ").append(this.getConfig().get(key)).append(" ");
+
+		return this.getSB().toString();
 	}
 
 	private boolean forceMinMax() {
