@@ -359,83 +359,83 @@ public class GDALTranslate extends GDAL {
 
 	@Override
 	public String convert() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		if (this.getScript() != null && !this.getScript().isEmpty()) {
-			return this.getScript();
-		} else if (this.showHelp()) {
-			sb.append("gdalinfo --help");
-			return sb.toString();
-		} else {
-			sb.append("gdal_translate ");
+//		StringBuilder sb = new StringBuilder();
+//		if (this.getScript() != null && !this.getScript().isEmpty()) {
+//			return this.getScript();
+//		} else if (this.showHelp()) {
+//			sb.append("gdalinfo --help");
+//			return sb.toString();
+//		} else {
+			this.getSB().append("gdal_translate ");
 			if (this.getOutputType() != null) 
-				sb.append("-ot ").append(this.getOutputType().name()).append(" ");
+				this.getSB().append("-ot ").append(this.getOutputType().name()).append(" ");
 			if (this.isStrict())
-				sb.append("-strict ");
+				this.getSB().append("-strict ");
 			if (this.getOutputFormat() != null)
-				sb.append("-of ").append(this.getOutputFormat().name()).append(" ");
+				this.getSB().append("-of ").append(this.getOutputFormat().name()).append(" ");
 			if (this.getBands() != null && this.getBands().size() > 0)
 				for (String b : this.getBands())
-					sb.append("-b ").append(b).append(" ");
+					this.getSB().append("-b ").append(b).append(" ");
 			if (this.getMask() != null && !this.getMask().isEmpty())
-				sb.append("-mask ").append(this.getMask()).append(" ");
+				this.getSB().append("-mask ").append(this.getMask()).append(" ");
 			if (this.getExpand() != null)
-				sb.append("-expand ").append(this.getExpand().name()).append(" ");
+				this.getSB().append("-expand ").append(this.getExpand().name()).append(" ");
 			if (this.getOutputSize() != null)
-				sb.append("-outsize ").append(this.getOutputSize().getWidth()).append(" ").append(this.getOutputSize().getHeight()).append(" ");
+				this.getSB().append("-outsize ").append(this.getOutputSize().getWidth()).append(" ").append(this.getOutputSize().getHeight()).append(" ");
 			if (this.getScale() != null) {
-				sb.append("-scale ").append(this.getScale().getInputMin()).append(" ").append(this.getScale().getInputMax()).append(" ");
-				sb.append(this.getScale().getOutputMin()).append(" ").append(this.getScale().getOutputMax()).append(" ");
+				this.getSB().append("-scale ").append(this.getScale().getInputMin()).append(" ").append(this.getScale().getInputMax()).append(" ");
+				this.getSB().append(this.getScale().getOutputMin()).append(" ").append(this.getScale().getOutputMax()).append(" ");
 			}
 			if (this.unscale())
-				sb.append("-unscale ");
+				this.getSB().append("-unscale ");
 			if (this.getSubWindowPixels() != null) {
-				sb.append("-srcwin ").append(this.getSubWindowPixels().getxOffset()).append(" ").append(this.getSubWindowPixels().getyOffset()).append(" ");
-				sb.append(this.getSubWindowPixels().getxSize()).append(" ").append(this.getSubWindowPixels().getySize()).append(" ");
+				this.getSB().append("-srcwin ").append(this.getSubWindowPixels().getxOffset()).append(" ").append(this.getSubWindowPixels().getyOffset()).append(" ");
+				this.getSB().append(this.getSubWindowPixels().getxSize()).append(" ").append(this.getSubWindowPixels().getySize()).append(" ");
 			}
 			if (this.getSubWindowCorners() != null) {
-				sb.append("-projwin ").append(this.getSubWindowCorners().getUpperLeftX()).append(" ").append(this.getSubWindowCorners().getUpperLeftY()).append(" ");
-				sb.append(this.getSubWindowCorners().getLowerRightX()).append(" ").append(this.getSubWindowCorners().getLowerRightY()).append(" ");
+				this.getSB().append("-projwin ").append(this.getSubWindowCorners().getUpperLeftX()).append(" ").append(this.getSubWindowCorners().getUpperLeftY()).append(" ");
+				this.getSB().append(this.getSubWindowCorners().getLowerRightX()).append(" ").append(this.getSubWindowCorners().getLowerRightY()).append(" ");
 			}
 			if (this.getOutputProjection() != null && !this.getOutputProjection().isEmpty()) 
-				sb.append("-a_srs ").append(this.getOutputProjection()).append(" ");
+				this.getSB().append("-a_srs ").append(this.getOutputProjection()).append(" ");
 			if (this.getOutputBounds() != null) {
-				sb.append("-a_ullr ").append(this.getOutputBounds().getUpperLeftX()).append(" ").append(this.getOutputBounds().getUpperLeftY()).append(" ");
-				sb.append(this.getOutputBounds().getLowerRightX()).append(" ").append(this.getOutputBounds().getLowerRightY()).append(" ");
+				this.getSB().append("-a_ullr ").append(this.getOutputBounds().getUpperLeftX()).append(" ").append(this.getOutputBounds().getUpperLeftY()).append(" ");
+				this.getSB().append(this.getOutputBounds().getLowerRightX()).append(" ").append(this.getOutputBounds().getLowerRightY()).append(" ");
 			}
 			if (this.getNoDataValue() != null && !this.getNoDataValue().isEmpty())
-				sb.append("-a_nodata ").append(this.getNoDataValue()).append(" ");
+				this.getSB().append("-a_nodata ").append(this.getNoDataValue()).append(" ");
 			if (this.getMetadataOutput() != null && !this.getMetadataOutput().isEmpty() && this.getMetadataOutput().size() < 2)
 				for (String key : this.getMetadataOutput().keySet())
-					sb.append("-mo \"").append(key).append("=").append(this.getMetadataOutput().get(key)).append("\" ");
+					this.getSB().append("-mo \"").append(key).append("=").append(this.getMetadataOutput().get(key)).append("\" ");
 			if (this.getCreationOption() != null && !this.getCreationOption().isEmpty())
 				for (String key : this.getCreationOption().keySet())
-					sb.append("-co \"").append(key).append("=").append(this.getCreationOption().get(key)).append("\" ");
+					this.getSB().append("-co \"").append(key).append("=").append(this.getCreationOption().get(key)).append("\" ");
 			if (this.getGroundControlPoint() != null) {
-				sb.append("-gcp ").append(this.getGroundControlPoint().getPixel()).append(" ").append(this.getGroundControlPoint().getLine()).append(" ");
-				sb.append(this.getGroundControlPoint().getEasting()).append(" ").append(this.getGroundControlPoint().getNorthing()).append(" ");
-				sb.append(this.getGroundControlPoint().getElevation()).append(" ");
+				this.getSB().append("-gcp ").append(this.getGroundControlPoint().getPixel()).append(" ").append(this.getGroundControlPoint().getLine()).append(" ");
+				this.getSB().append(this.getGroundControlPoint().getEasting()).append(" ").append(this.getGroundControlPoint().getNorthing()).append(" ");
+				this.getSB().append(this.getGroundControlPoint().getElevation()).append(" ");
 			}
 			if (this.suppressProgressMonitor())
-				sb.append("-q ");
+				this.getSB().append("-q ");
 			if (this.subDatasets2IndividualOutputs())
-				sb.append("-sds ");
+				this.getSB().append("-sds ");
 			if (this.statistics())
-				sb.append("-stats ");
+				this.getSB().append("-stats ");
 			if (this.getInputFilepath() != null && !this.getInputFilepath().isEmpty()) {
-				sb.append(this.getInputFilepath()).append(" ");
+				this.getSB().append(this.getInputFilepath()).append(" ");
 			} else {
 				throw new Exception("Input filepath is null or empty.");
 			}
 			if (this.getOutputFilepath() != null && !this.getOutputFilepath().isEmpty()) {
-				sb.append(this.getOutputFilepath()).append(" ");
+				this.getSB().append(this.getOutputFilepath()).append(" ");
 			} else {
 				throw new Exception("Output filepath is null or empty.");
 			}
-			if (this.getConfig() != null && !this.getConfig().isEmpty())
-				for (String key : this.getConfig().keySet())
-					sb.append("--config ").append(key).append(" ").append(this.getConfig().get(key)).append(" ");
-		}
-		return sb.toString();
+//			if (this.getConfig() != null && !this.getConfig().isEmpty())
+//				for (String key : this.getConfig().keySet())
+//					sb.append("--config ").append(key).append(" ").append(this.getConfig().get(key)).append(" ");
+//		}
+		return this.getSB().toString();
 	}
 
 }

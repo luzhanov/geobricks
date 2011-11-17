@@ -39,9 +39,11 @@ public abstract class GDAL {
 	private boolean help = false;
 	
 	private Map<String, String> config;
+	
+	private StringBuilder sb;
 
 	public GDAL() {
-
+		sb = new StringBuilder();
 	}
 
 	public GDAL(String script) {
@@ -57,7 +59,16 @@ public abstract class GDAL {
 	 *         command.
 	 */
 	public String convert() throws Exception {
-		return this.getScript();
+		if (this.getScript() != null && !this.getScript().isEmpty()) {
+			return this.getScript();
+		} else if (this.showHelp()) {
+			sb.append("gdalinfo --help");
+			return sb.toString();
+		}
+		if (this.getConfig() != null && !this.getConfig().isEmpty())
+			for (String key : this.getConfig().keySet())
+				sb.append("--config ").append(key).append(" ").append(this.getConfig().get(key)).append(" ");
+		return sb.toString();
 	}
 
 	public String getScript() {
@@ -104,6 +115,14 @@ public abstract class GDAL {
 		if (this.config == null)
 			this.config = new HashMap<String, String>();
 		this.config.put(key, value);
+	}
+
+	public StringBuilder getSB() {
+		return sb;
+	}
+
+	public void setSB(StringBuilder sb) {
+		this.sb = sb;
 	}
 
 }

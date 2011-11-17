@@ -131,4 +131,18 @@ public class GDALConnectorTest extends GeoBricksTest {
 		}
 	}
 	
+	public void testGDALHelp() {
+		try {
+			GDALInfo g = new GDALInfo();
+			g.help(true);
+			g.metadata(false);
+			List<String> l = c.invoke(g);
+			print(l);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }
