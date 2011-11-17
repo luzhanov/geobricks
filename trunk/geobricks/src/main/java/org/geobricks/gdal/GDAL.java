@@ -23,6 +23,8 @@ package org.geobricks.gdal;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.geobricks.gdal.constant.CONFIG;
+
 /**
  * 
  * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a>
@@ -38,7 +40,7 @@ public abstract class GDAL {
 
 	private boolean help = false;
 	
-	private Map<String, String> config;
+	private Map<CONFIG, String> config;
 	
 	private StringBuilder sb;
 
@@ -59,16 +61,7 @@ public abstract class GDAL {
 	 *         command.
 	 */
 	public String convert() throws Exception {
-		if (this.getScript() != null && !this.getScript().isEmpty()) {
-			return this.getScript();
-		} else if (this.showHelp()) {
-			sb.append("gdalinfo --help");
-			return sb.toString();
-		}
-		if (this.getConfig() != null && !this.getConfig().isEmpty())
-			for (String key : this.getConfig().keySet())
-				sb.append("--config ").append(key).append(" ").append(this.getConfig().get(key)).append(" ");
-		return sb.toString();
+		return this.getSB().toString();
 	}
 
 	public String getScript() {
@@ -103,17 +96,17 @@ public abstract class GDAL {
 		this.help = help;
 	}
 
-	public Map<String, String> getConfig() {
+	public Map<CONFIG, String> getConfig() {
 		return config;
 	}
 
-	public void setConfig(Map<String, String> config) {
+	public void setConfig(Map<CONFIG, String> config) {
 		this.config = config;
 	}
 	
-	public void setConfig(String key, String value) {
+	public void setConfig(CONFIG key, String value) {
 		if (this.config == null)
-			this.config = new HashMap<String, String>();
+			this.config = new HashMap<CONFIG, String>();
 		this.config.put(key, value);
 	}
 

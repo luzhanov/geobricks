@@ -23,7 +23,10 @@ package org.geobricks.gdal;
 import java.io.IOException;
 import java.util.List;
 
+import org.geobricks.gdal.addoverviews.GDALAddOverviews;
+import org.geobricks.gdal.constant.CONFIG;
 import org.geobricks.gdal.constant.FORMAT;
+import org.geobricks.gdal.constant.RESAMPLING;
 import org.geobricks.gdal.general.GDALFormat;
 import org.geobricks.gdal.general.GDALFormats;
 import org.geobricks.gdal.info.GDALInfo;
@@ -32,11 +35,11 @@ import org.geobricks.test.GeoBricksTest;
 
 /**
  * 
- * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a> 
- *
+ * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a>
+ * 
  */
 public class GDALConnectorTest extends GeoBricksTest {
-	
+
 	private GDALConnector c = new GDALConnector();
 
 	public void testGDALInfo() {
@@ -52,7 +55,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void testGDALFormats() {
 		try {
 			GDALFormats g = new GDALFormats();
@@ -64,7 +67,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void testGDALFormat() {
 		try {
 			GDALFormat g = new GDALFormat(FORMAT.GTiff);
@@ -76,7 +79,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void testGDALTranslate1() {
 		try {
 			GDALTranslate g = new GDALTranslate(getFilePath("long_beach-e.dem"), "/home/kalimaha/Desktop/long_beach-e.tif");
@@ -89,20 +92,21 @@ public class GDALConnectorTest extends GeoBricksTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Starting with GDAL 1.8.0, to create a JPEG-compressed TIFF with internal mask from a RGBA dataset 
+	 * Starting with GDAL 1.8.0, to create a JPEG-compressed TIFF with internal
+	 * mask from a RGBA dataset
 	 */
 	public void testGDALTranslate2() {
 		try {
 			GDALTranslate g = new GDALTranslate(getFilePath("marbles.tif"), "/home/kalimaha/Desktop/withmask.tif");
-			g.addBand("1");
-			g.addBand("2");
-			g.addBand("3");
-			g.setMask("4");
+			g.addBand(1);
+			g.addBand(2);
+			g.addBand(3);
+			g.setMask(4);
 			g.setCreationOption("COMPRESS", "JPEG");
 			g.setCreationOption("PHOTOMETRIC", "YCBCR");
-			g.setConfig("GDAL_TIFF_INTERNAL_MASK", "YES");
+			g.setConfig(CONFIG.GDAL_TIFF_INTERNAL_MASK, "YES");
 			List<String> l = c.invoke(g);
 			print(l);
 		} catch (IOException e) {
@@ -111,17 +115,18 @@ public class GDALConnectorTest extends GeoBricksTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Starting with GDAL 1.8.0, to create a RGBA dataset from a RGB dataset with a mask
+	 * Starting with GDAL 1.8.0, to create a RGBA dataset from a RGB dataset
+	 * with a mask
 	 */
 	public void testGDALTranslate3() {
 		try {
 			GDALTranslate g = new GDALTranslate(getFilePath("marbles.tif"), "/home/kalimaha/Desktop/withmask.tif");
-			g.addBand("1");
-			g.addBand("2");
-			g.addBand("3");
-			g.setMask("4");
+			g.addBand(1);
+			g.addBand(2);
+			g.addBand(3);
+			g.setMask(4);
 			List<String> l = c.invoke(g);
 			print(l);
 		} catch (IOException e) {
@@ -130,12 +135,17 @@ public class GDALConnectorTest extends GeoBricksTest {
 			e.printStackTrace();
 		}
 	}
-	
-	public void testGDALHelp() {
+
+	/**
+	 * Create overviews, embedded in the supplied TIFF file:
+	 */
+	public void testGDALAddOverviews1() {
 		try {
-			GDALInfo g = new GDALInfo();
-			g.help(true);
-			g.metadata(false);
+			GDALAddOverviews g = new GDALAddOverviews(getFilePath("marbles.tif"), RESAMPLING.average);
+			g.buildLevel(2);
+			g.buildLevel(4);
+			g.buildLevel(8);
+			g.buildLevel(16);
 			List<String> l = c.invoke(g);
 			print(l);
 		} catch (IOException e) {
@@ -144,5 +154,49 @@ public class GDALConnectorTest extends GeoBricksTest {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Create an external JPEG-compressed GeoTIFF overview file from a 3-band
+	 * RGB dataset (if the dataset is a writable GeoTIFF, you also need to add
+	 * the -ro option to force the generation of external overview):
+	 */
+	public void testGDALAddOverviews3() {
+		try {
+			GDALAddOverviews g = new GDALAddOverviews(getFilePath("marbles.tif"), RESAMPLING.nearest);
+			g.buildLevel(2);
+			g.buildLevel(4);
+			g.buildLevel(8);
+			g.buildLevel(16);
+			g.setConfig(CONFIG.COMPRESS_OVERVIEW, "JPEG");
+			g.setConfig(CONFIG.INTERLEAVE_OVERVIEW, "PIXEL");
+			g.setConfig(CONFIG.PHOTOMETRIC_OVERVIEW, "YCBCR");
+			List<String> l = c.invoke(g);
+			print(l);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create an Erdas Imagine format overviews for the indicated JPEG file:
+	 */
+	public void testGDALAddOverviews4() {
+		try {
+			GDALAddOverviews g = new GDALAddOverviews(getFilePath("marbles.tif"), RESAMPLING.nearest);
+			g.buildLevel(3);
+			g.buildLevel(9);
+			g.buildLevel(27);
+			g.buildLevel(81);
+			g.setConfig(CONFIG.USE_RRD, "YES");
+			List<String> l = c.invoke(g);
+			print(l);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

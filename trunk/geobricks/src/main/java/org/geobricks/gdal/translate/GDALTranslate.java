@@ -26,12 +26,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.geobricks.gdal.GDAL;
+import org.geobricks.gdal.constant.CONFIG;
 import org.geobricks.gdal.constant.EXPAND;
 import org.geobricks.gdal.constant.FORMAT;
 
 /**
  * 
  * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a>
+ * 
+ *         GDALTranslate utility can be used to convert raster data between
+ *         different formats, potentially performing some operations like
+ *         subsettings, resampling, and rescaling pixels in the process.
  * 
  */
 public class GDALTranslate extends GDAL {
@@ -60,7 +65,7 @@ public class GDALTranslate extends GDAL {
 	 * be set to "mask,1" (or just "mask") to mean the mask band of the 1st band
 	 * of the input dataset.
 	 */
-	private List<String> bands;
+	private List<Integer> bands;
 
 	/**
 	 * (GDAL >= 1.8.0) Select an input band band to create output dataset mask
@@ -71,7 +76,7 @@ public class GDALTranslate extends GDAL {
 	 * ("-b mask"). band can also be set to "mask,1" (or just "mask") to mean
 	 * the mask band of the 1st band of the input dataset.
 	 */
-	private String mask;
+	private Integer mask;
 
 	/**
 	 * (From GDAL 1.6.0) To expose a dataset with 1 band with a color table as a
@@ -203,25 +208,25 @@ public class GDALTranslate extends GDAL {
 		this.outputFormat = outputFormat;
 	}
 
-	public List<String> getBands() {
+	public List<Integer> getBands() {
 		return bands;
 	}
 
-	public void setBands(List<String> bands) {
+	public void setBands(List<Integer> bands) {
 		this.bands = bands;
 	}
-	
-	public void addBand(String band) {
+
+	public void addBand(Integer band) {
 		if (this.bands == null)
-			this.bands = new ArrayList<String>();
+			this.bands = new ArrayList<Integer>();
 		this.bands.add(band);
 	}
 
-	public String getMask() {
+	public Integer getMask() {
 		return mask;
 	}
 
-	public void setMask(String mask) {
+	public void setMask(Integer mask) {
 		this.mask = mask;
 	}
 
@@ -304,7 +309,7 @@ public class GDALTranslate extends GDAL {
 	public void setMetadataOutput(Map<String, String> metadataOutput) {
 		this.metadataOutput = metadataOutput;
 	}
-	
+
 	public void setMetadataOutput(String key, String value) {
 		if (this.metadataOutput == null)
 			this.metadataOutput = new HashMap<String, String>();
@@ -314,7 +319,7 @@ public class GDALTranslate extends GDAL {
 	public Map<String, String> getCreationOption() {
 		return creationOption;
 	}
-	
+
 	public void setCreationOption(String key, String value) {
 		if (this.creationOption == null)
 			this.creationOption = new HashMap<String, String>();
@@ -359,82 +364,84 @@ public class GDALTranslate extends GDAL {
 
 	@Override
 	public String convert() throws Exception {
-//		StringBuilder sb = new StringBuilder();
-//		if (this.getScript() != null && !this.getScript().isEmpty()) {
-//			return this.getScript();
-//		} else if (this.showHelp()) {
-//			sb.append("gdalinfo --help");
-//			return sb.toString();
-//		} else {
-			this.getSB().append("gdal_translate ");
-			if (this.getOutputType() != null) 
-				this.getSB().append("-ot ").append(this.getOutputType().name()).append(" ");
-			if (this.isStrict())
-				this.getSB().append("-strict ");
-			if (this.getOutputFormat() != null)
-				this.getSB().append("-of ").append(this.getOutputFormat().name()).append(" ");
-			if (this.getBands() != null && this.getBands().size() > 0)
-				for (String b : this.getBands())
-					this.getSB().append("-b ").append(b).append(" ");
-			if (this.getMask() != null && !this.getMask().isEmpty())
-				this.getSB().append("-mask ").append(this.getMask()).append(" ");
-			if (this.getExpand() != null)
-				this.getSB().append("-expand ").append(this.getExpand().name()).append(" ");
-			if (this.getOutputSize() != null)
-				this.getSB().append("-outsize ").append(this.getOutputSize().getWidth()).append(" ").append(this.getOutputSize().getHeight()).append(" ");
-			if (this.getScale() != null) {
-				this.getSB().append("-scale ").append(this.getScale().getInputMin()).append(" ").append(this.getScale().getInputMax()).append(" ");
-				this.getSB().append(this.getScale().getOutputMin()).append(" ").append(this.getScale().getOutputMax()).append(" ");
-			}
-			if (this.unscale())
-				this.getSB().append("-unscale ");
-			if (this.getSubWindowPixels() != null) {
-				this.getSB().append("-srcwin ").append(this.getSubWindowPixels().getxOffset()).append(" ").append(this.getSubWindowPixels().getyOffset()).append(" ");
-				this.getSB().append(this.getSubWindowPixels().getxSize()).append(" ").append(this.getSubWindowPixels().getySize()).append(" ");
-			}
-			if (this.getSubWindowCorners() != null) {
-				this.getSB().append("-projwin ").append(this.getSubWindowCorners().getUpperLeftX()).append(" ").append(this.getSubWindowCorners().getUpperLeftY()).append(" ");
-				this.getSB().append(this.getSubWindowCorners().getLowerRightX()).append(" ").append(this.getSubWindowCorners().getLowerRightY()).append(" ");
-			}
-			if (this.getOutputProjection() != null && !this.getOutputProjection().isEmpty()) 
-				this.getSB().append("-a_srs ").append(this.getOutputProjection()).append(" ");
-			if (this.getOutputBounds() != null) {
-				this.getSB().append("-a_ullr ").append(this.getOutputBounds().getUpperLeftX()).append(" ").append(this.getOutputBounds().getUpperLeftY()).append(" ");
-				this.getSB().append(this.getOutputBounds().getLowerRightX()).append(" ").append(this.getOutputBounds().getLowerRightY()).append(" ");
-			}
-			if (this.getNoDataValue() != null && !this.getNoDataValue().isEmpty())
-				this.getSB().append("-a_nodata ").append(this.getNoDataValue()).append(" ");
-			if (this.getMetadataOutput() != null && !this.getMetadataOutput().isEmpty() && this.getMetadataOutput().size() < 2)
-				for (String key : this.getMetadataOutput().keySet())
-					this.getSB().append("-mo \"").append(key).append("=").append(this.getMetadataOutput().get(key)).append("\" ");
-			if (this.getCreationOption() != null && !this.getCreationOption().isEmpty())
-				for (String key : this.getCreationOption().keySet())
-					this.getSB().append("-co \"").append(key).append("=").append(this.getCreationOption().get(key)).append("\" ");
-			if (this.getGroundControlPoint() != null) {
-				this.getSB().append("-gcp ").append(this.getGroundControlPoint().getPixel()).append(" ").append(this.getGroundControlPoint().getLine()).append(" ");
-				this.getSB().append(this.getGroundControlPoint().getEasting()).append(" ").append(this.getGroundControlPoint().getNorthing()).append(" ");
-				this.getSB().append(this.getGroundControlPoint().getElevation()).append(" ");
-			}
-			if (this.suppressProgressMonitor())
-				this.getSB().append("-q ");
-			if (this.subDatasets2IndividualOutputs())
-				this.getSB().append("-sds ");
-			if (this.statistics())
-				this.getSB().append("-stats ");
-			if (this.getInputFilepath() != null && !this.getInputFilepath().isEmpty()) {
-				this.getSB().append(this.getInputFilepath()).append(" ");
-			} else {
-				throw new Exception("Input filepath is null or empty.");
-			}
-			if (this.getOutputFilepath() != null && !this.getOutputFilepath().isEmpty()) {
-				this.getSB().append(this.getOutputFilepath()).append(" ");
-			} else {
-				throw new Exception("Output filepath is null or empty.");
-			}
-//			if (this.getConfig() != null && !this.getConfig().isEmpty())
-//				for (String key : this.getConfig().keySet())
-//					sb.append("--config ").append(key).append(" ").append(this.getConfig().get(key)).append(" ");
-//		}
+
+		this.getSB().append("gdal_translate ");
+		if (this.getOutputType() != null)
+			this.getSB().append("-ot ").append(this.getOutputType().name()).append(" ");
+		if (this.isStrict())
+			this.getSB().append("-strict ");
+		if (this.getOutputFormat() != null)
+			this.getSB().append("-of ").append(this.getOutputFormat().name()).append(" ");
+		if (this.getBands() != null && this.getBands().size() > 0)
+			for (Integer b : this.getBands())
+				this.getSB().append("-b ").append(b).append(" ");
+		if (this.getMask() != null)
+			this.getSB().append("-mask ").append(this.getMask()).append(" ");
+		if (this.getExpand() != null)
+			this.getSB().append("-expand ").append(this.getExpand().name()).append(" ");
+		if (this.getOutputSize() != null)
+			this.getSB().append("-outsize ").append(this.getOutputSize().getWidth()).append(" ").append(this.getOutputSize().getHeight()).append(" ");
+		if (this.getScale() != null) {
+			this.getSB().append("-scale ").append(this.getScale().getInputMin()).append(" ").append(this.getScale().getInputMax()).append(" ");
+			this.getSB().append(this.getScale().getOutputMin()).append(" ").append(this.getScale().getOutputMax()).append(" ");
+		}
+		if (this.unscale())
+			this.getSB().append("-unscale ");
+		if (this.getSubWindowPixels() != null) {
+			this.getSB().append("-srcwin ").append(this.getSubWindowPixels().getxOffset()).append(" ").append(this.getSubWindowPixels().getyOffset()).append(" ");
+			this.getSB().append(this.getSubWindowPixels().getxSize()).append(" ").append(this.getSubWindowPixels().getySize()).append(" ");
+		}
+		if (this.getSubWindowCorners() != null) {
+			this.getSB().append("-projwin ").append(this.getSubWindowCorners().getUpperLeftX()).append(" ").append(this.getSubWindowCorners().getUpperLeftY()).append(" ");
+			this.getSB().append(this.getSubWindowCorners().getLowerRightX()).append(" ").append(this.getSubWindowCorners().getLowerRightY()).append(" ");
+		}
+		if (this.getOutputProjection() != null && !this.getOutputProjection().isEmpty())
+			this.getSB().append("-a_srs ").append(this.getOutputProjection()).append(" ");
+		if (this.getOutputBounds() != null) {
+			this.getSB().append("-a_ullr ").append(this.getOutputBounds().getUpperLeftX()).append(" ").append(this.getOutputBounds().getUpperLeftY()).append(" ");
+			this.getSB().append(this.getOutputBounds().getLowerRightX()).append(" ").append(this.getOutputBounds().getLowerRightY()).append(" ");
+		}
+		if (this.getNoDataValue() != null && !this.getNoDataValue().isEmpty())
+			this.getSB().append("-a_nodata ").append(this.getNoDataValue()).append(" ");
+		if (this.getMetadataOutput() != null && !this.getMetadataOutput().isEmpty() && this.getMetadataOutput().size() < 2)
+			for (String key : this.getMetadataOutput().keySet())
+				this.getSB().append("-mo \"").append(key).append("=").append(this.getMetadataOutput().get(key)).append("\" ");
+		if (this.getCreationOption() != null && !this.getCreationOption().isEmpty())
+			for (String key : this.getCreationOption().keySet())
+				this.getSB().append("-co \"").append(key).append("=").append(this.getCreationOption().get(key)).append("\" ");
+		if (this.getGroundControlPoint() != null) {
+			this.getSB().append("-gcp ").append(this.getGroundControlPoint().getPixel()).append(" ").append(this.getGroundControlPoint().getLine()).append(" ");
+			this.getSB().append(this.getGroundControlPoint().getEasting()).append(" ").append(this.getGroundControlPoint().getNorthing()).append(" ");
+			this.getSB().append(this.getGroundControlPoint().getElevation()).append(" ");
+		}
+		if (this.suppressProgressMonitor())
+			this.getSB().append("-q ");
+		if (this.subDatasets2IndividualOutputs())
+			this.getSB().append("-sds ");
+		if (this.statistics())
+			this.getSB().append("-stats ");
+		if (this.getInputFilepath() != null && !this.getInputFilepath().isEmpty()) {
+			this.getSB().append(this.getInputFilepath()).append(" ");
+		} else {
+			throw new Exception("Input filepath is null or empty.");
+		}
+		if (this.getOutputFilepath() != null && !this.getOutputFilepath().isEmpty()) {
+			this.getSB().append(this.getOutputFilepath()).append(" ");
+		} else {
+			throw new Exception("Output filepath is null or empty.");
+		}
+
+		// generic section
+		if (this.getScript() != null && !this.getScript().isEmpty()) {
+			return this.getScript();
+		} else if (this.showHelp()) {
+			this.getSB().append("gdalinfo --help");
+			return this.getSB().toString();
+		}
+		if (this.getConfig() != null && !this.getConfig().isEmpty())
+			for (CONFIG key : this.getConfig().keySet())
+				this.getSB().append("--config ").append(key.name()).append(" ").append(this.getConfig().get(key)).append(" ");
+
 		return this.getSB().toString();
 	}
 
