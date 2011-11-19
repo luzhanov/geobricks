@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.geobricks.gdal.dem.hillshade;
+package org.geobricks.gdal.dem.tpi;
 
 import org.geobricks.gdal.constant.CONFIG;
 import org.geobricks.gdal.dem.GDALDEM;
@@ -27,89 +27,18 @@ import org.geobricks.gdal.dem.GDALDEM;
  * 
  * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a>
  * 
- *         Generate a shaded relief map from any GDAL-supported elevation raster
+ *         This command outputs a single-band raster with values computed from
+ *         the elevation. TPI stands for Topographic Position Index, which is
+ *         defined as the difference between a central pixel and the mean of its
+ *         surrounding cells (see Wilson et al 2007, Marine Geodesy 30:3-35).
+ *         The value -9999 is used as the output nodata value. There are no
+ *         specific options.
  * 
  */
-public class GDALDEMHillshade extends GDALDEM {
+public class GDALDEMTPI extends GDALDEM {
 
-	/**
-	 * vertical exaggeration used to pre-multiply the elevations
-	 */
-	private Integer zFactor;
-
-	/**
-	 * ratio of vertical units to horizontal. If the horizontal unit of the
-	 * source DEM is degrees (e.g Lat/Long WGS84 projection), you can use
-	 * scale=111120 if the vertical units are meters (or scale=370400 if they
-	 * are in feet)
-	 */
-	private Integer scale;
-
-	/**
-	 * azimuth of the light, in degrees. 0 if it comes from the top of the
-	 * raster, 90 from the east, ... The default value, 315, should rarely be
-	 * changed as it is the value generally used to generate shaded maps.
-	 */
-	private Integer azimuth;
-
-	/**
-	 * altitude of the light, in degrees. 90 if the light comes from above the
-	 * DEM, 0 if it is raking light.
-	 */
-	private Integer altitude;
-	
-	public GDALDEMHillshade(String inputFilepath, String outputFilepath) {
+	public GDALDEMTPI(String inputFilepath, String outputFilepath) {
 		super(inputFilepath, outputFilepath);
-	}
-
-	public Integer getzFactor() {
-		return zFactor;
-	}
-
-	/**
-	 * vertical exaggeration used to pre-multiply the elevations
-	 */
-	public void setzFactor(Integer zFactor) {
-		this.zFactor = zFactor;
-	}
-
-	public Integer getScale() {
-		return scale;
-	}
-
-	/**
-	 * ratio of vertical units to horizontal. If the horizontal unit of the
-	 * source DEM is degrees (e.g Lat/Long WGS84 projection), you can use
-	 * scale=111120 if the vertical units are meters (or scale=370400 if they
-	 * are in feet)
-	 */
-	public void setScale(Integer scale) {
-		this.scale = scale;
-	}
-
-	public Integer getAzimuth() {
-		return azimuth;
-	}
-
-	/**
-	 * azimuth of the light, in degrees. 0 if it comes from the top of the
-	 * raster, 90 from the east, ... The default value, 315, should rarely be
-	 * changed as it is the value generally used to generate shaded maps.
-	 */
-	public void setAzimuth(Integer azimuth) {
-		this.azimuth = azimuth;
-	}
-
-	public Integer getAltitude() {
-		return altitude;
-	}
-
-	/**
-	 * altitude of the light, in degrees. 90 if the light comes from above the
-	 * DEM, 0 if it is raking light.
-	 */
-	public void setAltitude(Integer altitude) {
-		this.altitude = altitude;
 	}
 
 	@Override
@@ -122,17 +51,9 @@ public class GDALDEMHillshade extends GDALDEM {
 			this.getSB().append("gdalinfo --help");
 			return this.getSB().toString();
 		}
-		
-		// GDALDEMHillshade specific
-		this.getSB().append("gdaldem hillshade ");
-		if (this.getzFactor() != null)
-			this.getSB().append("-z ").append(this.getzFactor()).append(" ");
-		if (this.getScale() != null)
-			this.getSB().append("-s ").append(this.getScale()).append(" ");
-		if (this.getAzimuth() != null)
-			this.getSB().append("-az ").append(this.getAzimuth()).append(" ");
-		if (this.getAltitude() != null)
-			this.getSB().append("-alt ").append(this.getAltitude()).append(" ");
+
+		// GDALDEMSlope specific
+		this.getSB().append("gdaldem TPI ");
 
 		// this section is common to all GDALDEM classes
 		if (this.getInputFilepath() != null && !this.getInputFilepath().isEmpty()) {
