@@ -124,6 +124,7 @@ public class GDALDEMHillshade extends GDALDEM {
 		}
 		
 		// GDALDEMHillshade specific
+		this.getSB().append("gdaldem hillshade ");
 		if (this.getzFactor() != null)
 			this.getSB().append("-z ").append(this.getzFactor()).append(" ");
 		if (this.getScale() != null)
@@ -134,7 +135,6 @@ public class GDALDEMHillshade extends GDALDEM {
 			this.getSB().append("-alt ").append(this.getAltitude()).append(" ");
 
 		// this section is common to all GDALDEM classes
-		this.getSB().append("gdaldem hillshade ");
 		if (this.getInputFilepath() != null && !this.getInputFilepath().isEmpty()) {
 			this.getSB().append(this.getInputFilepath()).append(" ");
 		} else {

@@ -88,13 +88,13 @@ public class GDALDEMAspect extends GDALDEM {
 		}
 
 		// GDALDEMAspect specific
+		this.getSB().append("gdaldem aspect ");
 		if (this.trigonometric())
 			this.getSB().append("-trigonometric ");
 		if (this.zeroForFlat())
 			this.getSB().append("-zero_for_flat ");
 
 		// this section is common to all GDALDEM classes
-		this.getSB().append("gdaldem aspect ");
 		if (this.getInputFilepath() != null && !this.getInputFilepath().isEmpty()) {
 			this.getSB().append(this.getInputFilepath()).append(" ");
 		} else {
