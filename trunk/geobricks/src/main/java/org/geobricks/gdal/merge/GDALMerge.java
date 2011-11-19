@@ -109,7 +109,7 @@ public class GDALMerge extends GDAL {
 	 * not marked as the nodata value in the output file. If only one value is
 	 * given, the same value is used in all the bands.
 	 */
-	private List<String> outputBandsInitValues;
+	private List<Integer> outputBandsInitValues;
 
 	/**
 	 * The output file is created (and potentially pre-initialized) but no input
@@ -231,17 +231,17 @@ public class GDALMerge extends GDAL {
 		this.outputBandsNoDataValue = outputBandsNoDataValue;
 	}
 
-	public List<String> getOutputBandsInitValues() {
+	public List<Integer> getOutputBandsInitValues() {
 		return outputBandsInitValues;
 	}
 
-	public void setOutputBandsInitValues(List<String> outputBandsInitValues) {
+	public void setOutputBandsInitValues(List<Integer> outputBandsInitValues) {
 		this.outputBandsInitValues = outputBandsInitValues;
 	}
 
-	public void addOutputBandInitValue(String outputBandInitValue) {
+	public void addOutputBandInitValue(Integer outputBandInitValue) {
 		if (this.outputBandsInitValues == null)
-			this.outputBandsInitValues = new ArrayList<String>();
+			this.outputBandsInitValues = new ArrayList<Integer>();
 		this.outputBandsInitValues.add(outputBandInitValue);
 	}
 
@@ -289,13 +289,19 @@ public class GDALMerge extends GDAL {
 		if (this.getOutputBandsNoDataValue() != null && !this.getOutputBandsNoDataValue().isEmpty())
 			this.getSB().append("-a_nodata ").append(this.getOutputBandsNoDataValue()).append(" ");
 		if (this.getOutputBandsInitValues() != null && !this.getOutputBandsInitValues().isEmpty()) {
-			this.getSB().append("-init \"");
-			for (String v : this.getOutputBandsInitValues())
+			this.getSB().append("-init ");
+			for (Integer v : this.getOutputBandsInitValues())
 				this.getSB().append(v).append(" ");
-			this.getSB().append("\" ");
 		}
 		if (this.createOnly())
 			this.getSB().append("-createonly ");
+		if (this.getInputFilepaths() != null && !this.getInputFilepaths().isEmpty()) {
+			for (String i : this.getInputFilepaths())
+				this.getSB().append(i).append(" ");
+		} else {
+			throw new Exception("No input files have been defined.");
+		}
+		
 
 		// configuration options
 		if (this.getConfig() != null && !this.getConfig().isEmpty())

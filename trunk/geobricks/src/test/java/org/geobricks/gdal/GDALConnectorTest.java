@@ -30,6 +30,7 @@ import org.geobricks.gdal.constant.RESAMPLING;
 import org.geobricks.gdal.general.GDALFormat;
 import org.geobricks.gdal.general.GDALFormats;
 import org.geobricks.gdal.info.GDALInfo;
+import org.geobricks.gdal.merge.GDALMerge;
 import org.geobricks.gdal.translate.GDALTranslate;
 import org.geobricks.gdal.warp.GDALWarp;
 import org.geobricks.test.GeoBricksTest;
@@ -218,13 +219,30 @@ public class GDALConnectorTest extends GeoBricksTest {
 		}
 	}
 	
-	public void testGDALWarpCalifornia() {
+	public void _testGDALWarpCalifornia() {
 		try {
 			GDALWarp g = new GDALWarp("/home/kalimaha/data/california-dems/california.tif", "/home/kalimaha/Desktop/california-mercator.tif");
 			g.setOutputSpatialReference("+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs");
 			List<String> l = c.invoke(g);
 			print(l);
 			System.out.println(g.getSB());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void testGDALMerge() {
+		try {
+			GDALMerge g = new GDALMerge("/home/kalimaha/data/california-dems/*.dem", "/home/kalimaha/Desktop/california.dem");
+			g.addOutputBandInitValue(255);
+			List<String> l = c.invoke(g);
+			print(l);
+			GDALInfo i = new GDALInfo();
+			i.setInputFilepath("/home/kalimaha/Desktop/california.dem");
+			l = c.invoke(i);
+			print(l);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
