@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.geobricks.gdal.translate;
+package org.geobricks.gdal.general;
 
 /**
  * 
@@ -73,6 +73,11 @@ public class OutputBounds {
 
 	public void setLowerRightY(String lowerRightY) {
 		this.lowerRightY = lowerRightY;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getUpperLeftX() + " " + this.getUpperLeftY() + " " + this.getLowerRightX() + " " + this.getLowerRightY();
 	}
 	
 }

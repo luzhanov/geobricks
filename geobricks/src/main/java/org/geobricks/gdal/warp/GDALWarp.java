@@ -573,9 +573,9 @@ public class GDALWarp extends GDAL {
 		
 		this.getSB().append("gdalwarp ");
 		if (this.getInputSpatialReference() != null && !this.getInputSpatialReference().isEmpty())
-			this.getSB().append("-s_srs '").append(this.getInputSpatialReference()).append("' ");
+			this.getSB().append("-s_srs \"").append(this.getInputSpatialReference()).append("\" ");
 		if (this.getOutputSpatialReference() != null && !this.getOutputSpatialReference().isEmpty())
-			this.getSB().append("-t_srs '").append(this.getOutputSpatialReference()).append("' ");
+			this.getSB().append("-t_srs \"").append(this.getOutputSpatialReference()).append("\" ");
 		if (this.getTransformerOptions() != null && !this.getTransformerOptions().isEmpty())
 			for (String key : this.getTransformerOptions().keySet())
 				this.getSB().append("-to \"").append(key).append("=").append(this.getTransformerOptions().get(key)).append("\" ");
@@ -639,7 +639,7 @@ public class GDALWarp extends GDAL {
 			this.getSB().append("-of ").append(this.getOutputFormat().name()).append(" ");
 		if (this.getCreationOption() != null && !this.getCreationOption().isEmpty())
 			for (String key : this.getCreationOption().keySet())
-				this.getSB().append("-co \"").append(key).append("=").append(this.getTransformerOptions().get(key)).append("\" ");
+				this.getSB().append("-co \"").append(key).append("=").append(this.getCreationOption().get(key)).append("\" ");
 		if (this.getCutlineDatasource() != null && !this.getCutlineDatasource().isEmpty())
 			this.getSB().append("-cutline ").append(this.getCutlineDatasource()).append(" ");
 		if (this.getCutlineLayer() != null && !this.getCutlineLayer().isEmpty())
