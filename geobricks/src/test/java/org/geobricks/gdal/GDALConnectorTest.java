@@ -27,6 +27,7 @@ import org.geobricks.gdal.addoverviews.GDALAddOverviews;
 import org.geobricks.gdal.constant.CONFIG;
 import org.geobricks.gdal.constant.FORMAT;
 import org.geobricks.gdal.constant.RESAMPLING;
+import org.geobricks.gdal.dem.hillshade.GDALDEMHillshade;
 import org.geobricks.gdal.general.GDALFormat;
 import org.geobricks.gdal.general.GDALFormats;
 import org.geobricks.gdal.info.GDALInfo;
@@ -233,7 +234,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 		}
 	}
 	
-	public void testGDALMerge() {
+	public void _testGDALMerge() {
 		try {
 			GDALMerge g = new GDALMerge("/home/kalimaha/data/california-dems/*.dem", "/home/kalimaha/Desktop/california.dem");
 			g.addOutputBandInitValue(255);
@@ -242,6 +243,19 @@ public class GDALConnectorTest extends GeoBricksTest {
 			GDALInfo i = new GDALInfo();
 			i.setInputFilepath("/home/kalimaha/Desktop/california.dem");
 			l = c.invoke(i);
+			print(l);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void testGDALDEMHillshade() {
+		try {
+			GDALDEMHillshade g = new GDALDEMHillshade("/home/kalimaha/Desktop/california.dem", "/home/kalimaha/Desktop/california.tif");
+			g.setScale(111120);
+			List<String> l = c.invoke(g);
 			print(l);
 		} catch (IOException e) {
 			e.printStackTrace();
