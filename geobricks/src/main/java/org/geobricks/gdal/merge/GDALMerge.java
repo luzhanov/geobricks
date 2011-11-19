@@ -21,6 +21,7 @@
 package org.geobricks.gdal.merge;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -155,8 +156,24 @@ public class GDALMerge extends GDAL {
 		return creationOption;
 	}
 
+	/**
+	 * Passes a creation option to the output format driver. Multiple -co
+	 * options may be listed. See format specific documentation for legal
+	 * creation options for each format.
+	 */
 	public void setCreationOption(Map<String, String> creationOption) {
 		this.creationOption = creationOption;
+	}
+	
+	/**
+	 * Passes a creation option to the output format driver. Multiple -co
+	 * options may be listed. See format specific documentation for legal
+	 * creation options for each format.
+	 */
+	public void addCreationOption(String option, String value) {
+		if (this.creationOption == null)
+			this.creationOption = new HashMap<String, String>();
+		this.creationOption.put(option, value);
 	}
 
 	public String getOutputBandsType() {
