@@ -31,6 +31,7 @@ import org.geobricks.gdal.general.GDALFormat;
 import org.geobricks.gdal.general.GDALFormats;
 import org.geobricks.gdal.info.GDALInfo;
 import org.geobricks.gdal.translate.GDALTranslate;
+import org.geobricks.gdal.warp.GDALWarp;
 import org.geobricks.test.GeoBricksTest;
 
 /**
@@ -42,7 +43,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 
 	private GDALConnector c = new GDALConnector();
 
-	public void testGDALInfo() {
+	public void _testGDALInfo() {
 		try {
 			GDALInfo g = new GDALInfo();
 			g.setInputFilepath(getFilePath("long_beach-e.dem"));
@@ -56,7 +57,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 		}
 	}
 
-	public void testGDALFormats() {
+	public void _testGDALFormats() {
 		try {
 			GDALFormats g = new GDALFormats();
 			List<String> l = c.invoke(g);
@@ -68,7 +69,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 		}
 	}
 
-	public void testGDALFormat() {
+	public void _testGDALFormat() {
 		try {
 			GDALFormat g = new GDALFormat(FORMAT.GTiff);
 			List<String> l = c.invoke(g);
@@ -80,7 +81,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 		}
 	}
 
-	public void testGDALTranslate1() {
+	public void _testGDALTranslate1() {
 		try {
 			GDALTranslate g = new GDALTranslate(getFilePath("long_beach-e.dem"), "/home/kalimaha/Desktop/long_beach-e.tif");
 			g.setCreationOption("TILED", "YES");
@@ -97,7 +98,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 	 * Starting with GDAL 1.8.0, to create a JPEG-compressed TIFF with internal
 	 * mask from a RGBA dataset
 	 */
-	public void testGDALTranslate2() {
+	public void _testGDALTranslate2() {
 		try {
 			GDALTranslate g = new GDALTranslate(getFilePath("marbles.tif"), "/home/kalimaha/Desktop/withmask.tif");
 			g.addBand(1);
@@ -120,7 +121,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 	 * Starting with GDAL 1.8.0, to create a RGBA dataset from a RGB dataset
 	 * with a mask
 	 */
-	public void testGDALTranslate3() {
+	public void _testGDALTranslate3() {
 		try {
 			GDALTranslate g = new GDALTranslate(getFilePath("marbles.tif"), "/home/kalimaha/Desktop/withmask.tif");
 			g.addBand(1);
@@ -139,7 +140,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 	/**
 	 * Create overviews, embedded in the supplied TIFF file:
 	 */
-	public void testGDALAddOverviews1() {
+	public void _testGDALAddOverviews1() {
 		try {
 			GDALAddOverviews g = new GDALAddOverviews(getFilePath("marbles.tif"), RESAMPLING.average);
 			g.buildLevel(2);
@@ -160,7 +161,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 	 * RGB dataset (if the dataset is a writable GeoTIFF, you also need to add
 	 * the -ro option to force the generation of external overview):
 	 */
-	public void testGDALAddOverviews3() {
+	public void _testGDALAddOverviews3() {
 		try {
 			GDALAddOverviews g = new GDALAddOverviews(getFilePath("marbles.tif"), RESAMPLING.nearest);
 			g.buildLevel(2);
@@ -182,7 +183,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 	/**
 	 * Create an Erdas Imagine format overviews for the indicated JPEG file:
 	 */
-	public void testGDALAddOverviews4() {
+	public void _testGDALAddOverviews4() {
 		try {
 			GDALAddOverviews g = new GDALAddOverviews(getFilePath("marbles.tif"), RESAMPLING.nearest);
 			g.buildLevel(3);
@@ -190,6 +191,24 @@ public class GDALConnectorTest extends GeoBricksTest {
 			g.buildLevel(27);
 			g.buildLevel(81);
 			g.setConfig(CONFIG.USE_RRD, "YES");
+			List<String> l = c.invoke(g);
+			print(l);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * For instance, an eight bit spot scene stored in GeoTIFF with control
+	 * points mapping the corners to lat/long could be warped to a UTM
+	 * projection with a command like this:
+	 */
+	public void testGDALWarp1() {
+		try {
+			GDALWarp g = new GDALWarp(getFilePath("rapallo.tif"), "/home/kalimaha/Desktop/utm11.tif");
+			g.setOutputSpatialReference("+proj=utm +zone=11 +datum=WGS84");
 			List<String> l = c.invoke(g);
 			print(l);
 		} catch (IOException e) {

@@ -97,7 +97,7 @@ public class GDALWarp extends GDAL {
 	 * error threshold for transformation approximation (in pixel units -
 	 * defaults to 0.125).
 	 */
-	private Double errorTreshold = 0.125;
+	private Double errorTreshold;
 
 	/**
 	 * (GDAL >= 1.9.0) refines the GCPs by automatically eliminating outliers.
@@ -202,7 +202,7 @@ public class GDALWarp extends GDAL {
 	 * Select the output format. The default is GeoTIFF (GTiff). Use the short
 	 * format name.
 	 */
-	private FORMAT outputFormat = FORMAT.GTiff;
+	private FORMAT outputFormat;
 
 	/**
 	 * passes a creation option to the output format driver. Multiple -co
@@ -247,6 +247,18 @@ public class GDALWarp extends GDAL {
 	 * (GDAL >= 1.8.0) Overwrite the target dataset if it already exists.
 	 */
 	private boolean overwrite = false;
+	
+	public GDALWarp(List<String> inputFilepaths, String outputFilepath) {
+		super();
+		this.setInputFilepaths(inputFilepaths);
+		this.setOutputFilepath(outputFilepath);
+	}
+	
+	public GDALWarp(String inputFilepath, String outputFilepath) {
+		super();
+		this.addInputFilepath(inputFilepath);
+		this.setOutputFilepath(outputFilepath);
+	}
 
 	public List<String> getInputFilepaths() {
 		return inputFilepaths;
@@ -561,9 +573,9 @@ public class GDALWarp extends GDAL {
 		
 		this.getSB().append("gdalwarp ");
 		if (this.getInputSpatialReference() != null && !this.getInputSpatialReference().isEmpty())
-			this.getSB().append("-s_srs ").append(this.getInputSpatialReference()).append(" ");
+			this.getSB().append("-s_srs '").append(this.getInputSpatialReference()).append("' ");
 		if (this.getOutputSpatialReference() != null && !this.getOutputSpatialReference().isEmpty())
-			this.getSB().append("-t_srs ").append(this.getOutputSpatialReference()).append(" ");
+			this.getSB().append("-t_srs '").append(this.getOutputSpatialReference()).append("' ");
 		if (this.getTransformerOptions() != null && !this.getTransformerOptions().isEmpty())
 			for (String key : this.getTransformerOptions().keySet())
 				this.getSB().append("-to \"").append(key).append("=").append(this.getTransformerOptions().get(key)).append("\" ");
