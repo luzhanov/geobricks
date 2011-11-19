@@ -27,6 +27,7 @@ package org.geobricks.gdal.constant;
  */
 public enum RESAMPLING {
 
-	nearest, average, gauss, cubic, average_mp, average_magphase, mode;
+	nearest, average, gauss, cubic, average_mp, 
+	average_magphase, mode, bilinear, cubicspline, lanczos;
 	
 }
