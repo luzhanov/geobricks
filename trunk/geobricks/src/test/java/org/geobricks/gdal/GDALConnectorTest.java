@@ -21,6 +21,7 @@
 package org.geobricks.gdal;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.geobricks.gdal.addoverviews.GDALAddOverviews;
@@ -251,10 +252,30 @@ public class GDALConnectorTest extends GeoBricksTest {
 		}
 	}
 	
-	public void testGDALDEMHillshade() {
+	public void _testGDALDEMHillshade() {
 		try {
 			GDALDEMHillshade g = new GDALDEMHillshade("/home/kalimaha/Desktop/california.dem", "/home/kalimaha/Desktop/california.tif");
 			g.setScale(111120);
+			List<String> l = c.invoke(g);
+			print(l);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Files available at: http://www.michiganview.org/display/miview/Introduction+to+GDAL#IntroductiontoGDAL-ExampleFiles
+	 */
+	public void testGDALMerge() {
+		try {
+			List<String> inputFilepaths = new ArrayList<String>();
+			inputFilepaths.add("/home/kalimaha/data/ne_small.tif");
+			inputFilepaths.add("/home/kalimaha/data/nw_small.tif");
+			inputFilepaths.add("/home/kalimaha/data/se_small.tif");
+			inputFilepaths.add("/home/kalimaha/data/sw_small.tif");
+			GDALMerge g = new GDALMerge(inputFilepaths, "/home/kalimaha/Desktop/nswe.tif");
 			List<String> l = c.invoke(g);
 			print(l);
 		} catch (IOException e) {
