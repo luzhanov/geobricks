@@ -47,8 +47,11 @@ public class GDALConnector {
 		List<String> l = new ArrayList<String>();
 		Process p = Runtime.getRuntime().exec(g.convert());
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 		String s = null;
 		while ((s = stdInput.readLine()) != null)
+			l.add(s);
+		while ((s = stdError.readLine()) != null)
 			l.add(s);
 		return l;
 	}
