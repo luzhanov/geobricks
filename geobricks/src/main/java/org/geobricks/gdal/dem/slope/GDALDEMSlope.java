@@ -92,13 +92,13 @@ public class GDALDEMSlope extends GDALDEM {
 		}
 
 		// GDALDEMSlope specific
+		this.getSB().append("gdaldem slope ");
 		if (this.percentage())
 			this.getSB().append("-p ");
 		if (this.getScale() != null)
 			this.getSB().append("-s ").append(this.getScale()).append(" ");
 
 		// this section is common to all GDALDEM classes
-		this.getSB().append("gdaldem slope ");
 		if (this.getInputFilepath() != null && !this.getInputFilepath().isEmpty()) {
 			this.getSB().append(this.getInputFilepath()).append(" ");
 		} else {
