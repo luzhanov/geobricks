@@ -74,5 +74,10 @@ public class GeoreferencedExtents {
 	public void setyMax(String yMax) {
 		this.yMax = yMax;
 	}
+	
+	@Override
+	public String toString() {
+		return this.getxMin() + " " + this.getyMin() + " " + this.getxMax() + " " + this.getyMax();
+	}
 
 }

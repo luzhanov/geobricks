@@ -53,4 +53,9 @@ public class FileResolution {
 		this.yResolution = yResolution;
 	}
 	
+	@Override
+	public String toString() {
+		return this.getxResolution() + " " + this.getyResolution();
+	}
+	
 }

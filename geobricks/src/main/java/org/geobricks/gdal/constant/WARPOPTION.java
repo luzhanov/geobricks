@@ -18,44 +18,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.geobricks.gdal.warp;
+package org.geobricks.gdal.constant;
 
 /**
  * 
- * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a> 
- *
+ * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a>
+ * 
+ *         Warp control options for use with GDALWarp
+ * 
  */
-public class FileSize {
+public enum WARPOPTION {
 
-	private String width;
-	
-	private String height;
-	
-	public FileSize(String width, String height) {
-		super();
-		this.setWidth(width);
-		this.setHeight(height);
-	}
+	INIT_DEST, NO_DATA, WRITE_FLUSH, YES, NO, 
+	SKIP_NOSOURCE, UNIFIED_SRC_NODATA, SAMPLE_GRID, SAMPLE_STEPS, SOURCE_EXTRA, 
+	CUTLINE, CUTLINE_BLEND_DIST, CUTLINE_ALL_TOUCHED, TRUE, FALSE, OPTIMIZE_SIZE;
 
-	public String getWidth() {
-		return width;
-	}
-
-	public void setWidth(String width) {
-		this.width = width;
-	}
-
-	public String getHeight() {
-		return height;
-	}
-
-	public void setHeight(String height) {
-		this.height = height;
-	}
-	
-	@Override
-	public String toString() {
-		return this.getWidth() + " " + this.getHeight();
-	}
-	
 }
