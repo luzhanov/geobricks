@@ -205,12 +205,26 @@ public class GDALConnectorTest extends GeoBricksTest {
 	 * points mapping the corners to lat/long could be warped to a UTM
 	 * projection with a command like this:
 	 */
-	public void testGDALWarp1() {
+	public void _testGDALWarp1() {
 		try {
 			GDALWarp g = new GDALWarp(getFilePath("rapallo.tif"), "/home/kalimaha/Desktop/utm11.tif");
 			g.setOutputSpatialReference("+proj=utm +zone=11 +datum=WGS84");
 			List<String> l = c.invoke(g);
 			print(l);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void testGDALWarpCalifornia() {
+		try {
+			GDALWarp g = new GDALWarp("/home/kalimaha/data/california-dems/california.tif", "/home/kalimaha/Desktop/california-mercator.tif");
+			g.setOutputSpatialReference("+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs");
+			List<String> l = c.invoke(g);
+			print(l);
+			System.out.println(g.getSB());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
