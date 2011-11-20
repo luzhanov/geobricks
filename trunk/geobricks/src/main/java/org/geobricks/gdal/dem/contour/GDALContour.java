@@ -230,7 +230,6 @@ public class GDALContour extends GDAL {
 			return this.getSB().toString();
 		}
 
-		// GDALDEMSlope specific
 		this.getSB().append("gdal_contour ");
 		if (this.getBand() != null)
 			this.getSB().append("-b ").append(this.getBand()).append(" ");
