@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geobricks.gdal.addoverviews.GDALAddOverviews;
+import org.geobricks.gdal.buildvrt.GDALBuildVRT;
 import org.geobricks.gdal.constant.CONFIG;
 import org.geobricks.gdal.constant.FORMAT;
 import org.geobricks.gdal.constant.RESAMPLING;
@@ -268,7 +269,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 	/**
 	 * Files available at: http://www.michiganview.org/display/miview/Introduction+to+GDAL#IntroductiontoGDAL-ExampleFiles
 	 */
-	public void testGDALMerge() {
+	public void _testGDALMerge4() {
 		try {
 			List<String> inputFilepaths = new ArrayList<String>();
 			inputFilepaths.add("/home/kalimaha/data/ne_small.tif");
@@ -278,6 +279,19 @@ public class GDALConnectorTest extends GeoBricksTest {
 			GDALMerge g = new GDALMerge(inputFilepaths, "/home/kalimaha/Desktop/nswe.tif");
 			List<String> l = c.invoke(g);
 			print(l);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void testGDALBuildVRT() {
+		try {
+			GDALBuildVRT g = new GDALBuildVRT("/home/kalimaha/data/california-dems/*.dem", "/home/kalimaha/Desktop/CA.vrt");
+			List<String> l = c.invoke(g);
+			print(l);
+			System.out.println(g.getSB());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {

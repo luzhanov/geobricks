@@ -30,6 +30,7 @@ import org.geobricks.gdal.constant.CONFIG;
 import org.geobricks.gdal.constant.FORMAT;
 import org.geobricks.gdal.constant.RESAMPLING;
 import org.geobricks.gdal.constant.WARPOPTION;
+import org.geobricks.gdal.general.GeoreferencedExtents;
 
 /**
  * 
