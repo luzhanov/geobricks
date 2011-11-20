@@ -25,10 +25,8 @@ package org.geobricks.gdal.constant;
  * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a> 
  *
  */
-public enum RESAMPLING {
+public enum WEBVIEWER {
 
-	near, nearest, average, gauss, cubic, average_mp, 
-	average_magphase, mode, bilinear, cubicspline, lanczos,
-	antialias;
+	all, google, openlayers, none;
 	
 }
