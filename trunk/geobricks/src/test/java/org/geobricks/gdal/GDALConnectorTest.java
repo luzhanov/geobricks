@@ -30,6 +30,7 @@ import org.geobricks.gdal.constant.CONFIG;
 import org.geobricks.gdal.constant.FORMAT;
 import org.geobricks.gdal.constant.RESAMPLING;
 import org.geobricks.gdal.dem.hillshade.GDALDEMHillshade;
+import org.geobricks.gdal.dem.rasterize.GDALRasterize;
 import org.geobricks.gdal.general.GDALFormat;
 import org.geobricks.gdal.general.GDALFormats;
 import org.geobricks.gdal.info.GDALInfo;
@@ -286,12 +287,31 @@ public class GDALConnectorTest extends GeoBricksTest {
 		}
 	}
 	
-	public void testGDALBuildVRT() {
+	public void _testGDALBuildVRT() {
 		try {
 			GDALBuildVRT g = new GDALBuildVRT("/home/kalimaha/data/california-dems/*.dem", "/home/kalimaha/Desktop/CA.vrt");
 			List<String> l = c.invoke(g);
 			print(l);
 			System.out.println(g.getSB());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void test() {
+		try {
+			GDALRasterize g = new GDALRasterize("/home/kalimaha/data/GAUL0_2008/g2008_0.shp", "/home/kalimaha/Desktop/marbles.tif");
+			g.addBand(1);
+			g.addBand(2);
+			g.addBand(3);
+			g.addBurnValue("0");
+			g.addBurnValue("0");
+			g.addBurnValue("255");
+			g.addLayerName("g2008_0");
+			List<String> l = c.invoke(g);
+			print(l);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {

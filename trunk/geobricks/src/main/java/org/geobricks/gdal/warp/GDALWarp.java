@@ -30,6 +30,8 @@ import org.geobricks.gdal.constant.CONFIG;
 import org.geobricks.gdal.constant.FORMAT;
 import org.geobricks.gdal.constant.RESAMPLING;
 import org.geobricks.gdal.constant.WARPOPTION;
+import org.geobricks.gdal.general.FileResolution;
+import org.geobricks.gdal.general.FileSize;
 import org.geobricks.gdal.general.GeoreferencedExtents;
 
 /**
