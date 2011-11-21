@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.geobricks.gdal.translate;
+package org.geobricks.gdal.general;
 
 /**
  * 
