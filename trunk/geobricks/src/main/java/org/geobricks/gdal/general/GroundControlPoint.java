@@ -86,4 +86,12 @@ public class GroundControlPoint {
 		this.elevation = elevation;
 	}
 	
+	@Override
+	public String toString() {
+		String s = this.getPixel() + " " + this.getLine() + " " + this.getEasting() + " " + this.getNorthing();
+		if (this.getElevation() != null && !this.getElevation().isEmpty())
+			s += this.getElevation();
+		return s;
+	}
+	
 }

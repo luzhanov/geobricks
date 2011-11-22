@@ -20,10 +20,13 @@
  */
 package org.geobricks.gdal.dem.transform;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.geobricks.gdal.GDAL;
+import org.geobricks.gdal.constant.CONFIG;
 import org.geobricks.gdal.general.GroundControlPoint;
 
 /**
@@ -87,12 +90,7 @@ public class GDALTransform extends GDAL {
 	 * Provide a GCP to be used for transformation (generally three or more are
 	 * required)
 	 */
-	private GroundControlPoint groundControlPoint;
-
-	public GDALTransform(String inputFilepath, String outputFilepath) {
-		this.setInputFilepath(inputFilepath);
-		this.setOutputFilepath(outputFilepath);
-	}
+	private List<GroundControlPoint> groundControlPoints;
 
 	public String getInputSpatialReferenceSet() {
 		return inputSpatialReferenceSet;
@@ -215,8 +213,8 @@ public class GDALTransform extends GDAL {
 		this.inverse = inverse;
 	}
 
-	public GroundControlPoint getGroundControlPoint() {
-		return groundControlPoint;
+	public List<GroundControlPoint> getGroundControlPoints() {
+		return groundControlPoints;
 	}
 
 	/**
@@ -225,8 +223,71 @@ public class GDALTransform extends GDAL {
 	 *            Provide a GCP to be used for transformation (generally three
 	 *            or more are required)
 	 */
-	public void setGroundControlPoint(GroundControlPoint groundControlPoint) {
-		this.groundControlPoint = groundControlPoint;
+	public void setGroundControlPoint(List<GroundControlPoint> groundControlPoints) {
+		this.groundControlPoints = groundControlPoints;
+	}
+	
+	/**
+	 * @param groundControlPoint
+	 * 
+	 *            Provide a GCP to be used for transformation (generally three
+	 *            or more are required)
+	 */
+	public void addGroundControlPoint(GroundControlPoint p) {
+		if (this.groundControlPoints == null)
+			this.groundControlPoints = new ArrayList<GroundControlPoint>();
+		this.groundControlPoints.add(p);
+	}
+	
+	@Override
+	public String convert() throws Exception {
+
+		// generic help
+		if (this.getScript() != null && !this.getScript().isEmpty()) {
+			return this.getScript();
+		} else if (this.showHelp()) {
+			this.getSB().append("gdalinfo --help");
+			return this.getSB().toString();
+		}
+
+		// GDALDEMSlope specific
+		this.getSB().append("gdaltransform ");
+		if (this.inverse())
+			this.getSB().append("-i ");
+		if (this.getInputSpatialReferenceSet() != null && !this.getInputSpatialReferenceSet().isEmpty())
+			this.getSB().append("-s_srs ").append(this.getInputSpatialReferenceSet()).append(" ");
+		if (this.getOutputSpatialReferenceSet() != null && !this.getOutputSpatialReferenceSet().isEmpty())
+			this.getSB().append("-t_srs ").append(this.getOutputSpatialReferenceSet()).append(" ");
+		if (this.getTransformerOptions() != null && !this.getTransformerOptions().isEmpty()) 
+			for (String key : this.getTransformerOptions().keySet())
+				this.getSB().append("-to \"").append(key).append("=").append(this.getTransformerOptions().get(key)).append("\" ");
+		if (this.getOrder() != null) {
+			if (this.getOrder() > 0 && this.getOrder() < 4) {
+				this.getSB().append("-order ").append(this.getOrder()).append(" ");
+			} else {
+				throw new Exception("Order must be between 1 and 3.");
+			}
+		}
+		if (this.forceThinSplineTransformer())
+			this.getSB().append("-tps ");
+		if (this.forceRPCs())
+			this.getSB().append("-rpc ");
+		if (this.forceGeolocationArrays())
+			this.getSB().append("-geoloc ");
+		if (this.getGroundControlPoints() != null && !this.getGroundControlPoints().isEmpty())
+			for (GroundControlPoint p : this.getGroundControlPoints())
+				this.getSB().append("-gcp ").append(p).append(" ");
+		if (this.getInputFilepath() != null && !this.getInputFilepath().isEmpty()) 
+			this.getSB().append(this.getInputFilepath()).append(" ");
+		if (this.getOutputFilepath() != null && !this.getOutputFilepath().isEmpty()) 
+			this.getSB().append(this.getOutputFilepath()).append(" ");
+		
+		// configuration options
+		if (this.getConfig() != null && !this.getConfig().isEmpty())
+			for (CONFIG key : this.getConfig().keySet())
+				this.getSB().append("--config ").append(key.name()).append(" ").append(this.getConfig().get(key)).append(" ");
+
+		return this.getSB().toString();
 	}
 
 }
