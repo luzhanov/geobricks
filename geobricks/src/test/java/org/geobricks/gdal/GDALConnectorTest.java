@@ -31,6 +31,7 @@ import org.geobricks.gdal.constant.FORMAT;
 import org.geobricks.gdal.constant.RESAMPLING;
 import org.geobricks.gdal.dem.hillshade.GDALDEMHillshade;
 import org.geobricks.gdal.dem.rasterize.GDALRasterize;
+import org.geobricks.gdal.dem.transform.GDALTransform;
 import org.geobricks.gdal.general.GDALFormat;
 import org.geobricks.gdal.general.GDALFormats;
 import org.geobricks.gdal.info.GDALInfo;
@@ -300,7 +301,7 @@ public class GDALConnectorTest extends GeoBricksTest {
 		}
 	}
 	
-	public void test() {
+	public void _testGDALRasterize() {
 		try {
 			GDALRasterize g = new GDALRasterize("/home/kalimaha/data/GAUL0_2008/g2008_0.shp", "/home/kalimaha/Desktop/marbles.tif");
 			g.addBand(1);
@@ -310,6 +311,21 @@ public class GDALConnectorTest extends GeoBricksTest {
 			g.addBurnValue("0");
 			g.addBurnValue("255");
 			g.addLayerName("g2008_0");
+			List<String> l = c.invoke(g);
+			print(l);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void testGDALTransform() {
+		try {
+			GDALTransform g = new GDALTransform();
+			g.setInputSpatialReferenceSet("EPSG:28992");
+			g.setOutputSpatialReferenceSet("EPSG:31370");
+			g.setInputFilepath("177502 311865");
 			List<String> l = c.invoke(g);
 			print(l);
 		} catch (IOException e) {
