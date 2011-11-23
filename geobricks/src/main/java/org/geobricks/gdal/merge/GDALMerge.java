@@ -29,6 +29,7 @@ import org.geobricks.gdal.GDAL;
 import org.geobricks.gdal.constant.CONFIG;
 import org.geobricks.gdal.constant.FORMAT;
 import org.geobricks.gdal.general.OutputBounds;
+import org.geobricks.gdal.general.PixelSize;
 
 /**
  * 
