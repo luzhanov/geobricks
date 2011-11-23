@@ -18,50 +18,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.geobricks.gdal.merge;
+package org.geobricks.gdal.constant;
 
 /**
  * 
  * @author <a href="mailto:guido.barbaglia@gmail.com">Guido Barbaglia</a> 
  *
  */
-public class PixelSize {
+public enum BANDSTYPE {
 
-	private String xPixelSize;
-	
-	private String yPixelSize;
-	
-	public PixelSize(String xPixelSize, String yPixelSize) {
-		super();
-		this.setxPixelSize(xPixelSize);
-		this.setyPixelSize(yPixelSize);
-	}
-	
-	public PixelSize(String xPixelSize) {
-		super();
-		this.setxPixelSize(xPixelSize);
-		this.setyPixelSize(xPixelSize);
-	}
-
-	public String getxPixelSize() {
-		return xPixelSize;
-	}
-
-	public void setxPixelSize(String xPixelSize) {
-		this.xPixelSize = xPixelSize;
-	}
-
-	public String getyPixelSize() {
-		return yPixelSize;
-	}
-
-	public void setyPixelSize(String yPixelSize) {
-		this.yPixelSize = yPixelSize;
-	}
-	
-	@Override
-	public String toString() {
-		return this.getxPixelSize() + " " + this.getyPixelSize();
-	}
+	Byte, Int16, UInt16, UInt32, Int32, Float32, Float64, CInt16, CInt32, CFloat32, CFloat64;
 	
 }
